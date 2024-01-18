@@ -25,7 +25,8 @@ export const LandingHero = () => {
       <div className="text-sm md:text-xl font-light text-zinc-bold">
         Manage your embeddings and chunks with ease.
         <br />
-        Compare and analyse results to build production-ready RAG applications.
+        Compare and analyse results to build production-ready
+        Retrieval-Augmented Generation (RAG) applications.
       </div>
       <div>
         <GetStartedButton />
