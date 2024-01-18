@@ -23,7 +23,7 @@ DERA_DB_USER_NAME=dera
 DERA_DB_USER_PW=dera
 ```
 
-Login to the database and create a schema for the user: `create schema dera authorization dera;`.
+Login to the database and create a schema for the user: `create schema dera authorization dera;`. Also make sure you enabled the `uuid-ossp` extension: `CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`.
 
 ### Set up flyway
 

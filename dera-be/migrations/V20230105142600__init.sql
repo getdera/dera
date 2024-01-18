@@ -6,7 +6,7 @@ CREATE TABLE projects (
   creator_id TEXT NOT NULL,
   name TEXT NOT NULL,
   description TEXT,
-  neon_project_id TEXT NOT NULL,
+  neon_project_id TEXT NOT NULL
 );
 
 CREATE INDEX ON projects (org_id);
