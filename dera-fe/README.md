@@ -42,7 +42,7 @@ Make a copy of [sample.env](./sample.env) and name it `.env`. Update the values 
 
 ### 3. Install dependencies
 
-Run `yarn ci`.
+Run `yarn --frozen-lockfile`.
 
 ### 4. Run it
 
