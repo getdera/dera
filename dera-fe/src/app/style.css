@@ -1,0 +1,7 @@
+@import './globals.css';
+@import '@mantine/notifications/styles.css';
+@import '@mantine/code-highlight/styles.css';
+@import '@mantine/core/styles.css';
+@import '@mantine/core/styles.layer.css';
+@import 'mantine-datatable/dist/styles.layer.css';
+@layer mantine, mantine-datatable;
