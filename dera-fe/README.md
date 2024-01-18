@@ -15,6 +15,7 @@ Create an application for Dera by following these instructions:
 1. Login to [Clerk](https://dashboard.clerk.com/)
 2. Add an application.
 3. Take note of the application keys which you will need for the environment variables.
+4. Go to Organization Settings and enable organizations
 
 #### Custom JWT Template
 
