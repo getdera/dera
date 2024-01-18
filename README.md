@@ -4,7 +4,7 @@
 [Dera](https://getdera.com) is a tool to manage chunks and embeddings so that users can iterate rapidly on different chunking strategies. Through this, it aims to help users build better Retrieval-Augmented Generation (RAG) apps.
 
 ### Problem
-A good RAG system depends on good retrievals and good retrievals depend on good chunking strategies that results in quality embeddings. There is no good tool for testing out different chunking strategies:
+A good RAG system depends on good retrievals, and good retrievals depend on good chunking strategies that result in quality embeddings. There is no good tool for testing out different chunking strategies:
   - Vector databases are too sophisticated (and expensive) for iterating during development phase. They are good for production usage when you have settled on your chunks.
   - The alternatives are either
     - Write chunks and embeddings into local files. At runtime, read them into memory and use a library to do similarity matching. It is hard to track the different versions, evaluate results, and you don't get the benefits of using a proper database with vector support.

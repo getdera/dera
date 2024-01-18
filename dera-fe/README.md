@@ -6,7 +6,7 @@ Dera Frontend is a Next.js web application.
 
 ### 1. Set up Clerk Authentication
 
-Dera uses [Clerk](https://clerk.com/) for user authentication. You need to create an account with Clerk if you do not already have one.
+Dera uses [Clerk](https://clerk.com/) for user authentication. You need to create an account with Clerk if you do not already have one. The free tier is good enough to run Dera locally.
 
 #### Create an application for Dera in Clerk
 
@@ -15,7 +15,7 @@ Create an application for Dera by following these instructions:
 1. Login to [Clerk](https://dashboard.clerk.com/)
 2. Add an application.
 3. Take note of the application keys which you will need for the environment variables.
-4. Go to Organization Settings and enable organizations
+4. Go to **Organization Settings** and enable organizations for the application.
 
 #### Custom JWT Template
 
