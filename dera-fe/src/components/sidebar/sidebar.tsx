@@ -1,15 +1,13 @@
 'use client';
-import { Text, Group } from '@mantine/core';
-import classes from './sidebar.module.css';
-import { cn } from '../../lib/utils';
-import Link from 'next/link';
 import { OrganizationSwitcher } from '@clerk/nextjs';
+import { Group, Text } from '@mantine/core';
+import Link from 'next/link';
+import { cn } from '../../lib/utils';
+import classes from './sidebar.module.css';
 
 const Sidebar = () => {
   return (
-    <nav className={classes.sidebar}>
-      <div className={cn('h-12', classes.section)}></div>
-
+    <>
       <div className={classes.section}>
         <Group className={classes.collectionsHeader} justify="space-between">
           <Text size="xs" fw={500} c="dimmed">
@@ -64,7 +62,7 @@ const Sidebar = () => {
           </Link>
         </div>
       </div> */}
-    </nav>
+    </>
   );
 };
 
