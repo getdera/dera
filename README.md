@@ -1,3 +1,5 @@
+<img src="https://avatars.githubusercontent.com/u/156977686?s=72&v=4">
+
 # Dera - Data Encoding and Representation Analysis
 
 ## Dera
