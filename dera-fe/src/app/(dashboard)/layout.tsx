@@ -1,8 +1,9 @@
 'use client';
 
 import { UserButton } from '@clerk/nextjs';
-import { AppShell, Burger, Container, Group } from '@mantine/core';
+import { AppShell, Box, Burger, Container, Group } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import Image from 'next/image';
 import Sidebar from '../../components/sidebar/sidebar';
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
@@ -20,14 +21,15 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     >
       <AppShell.Header p={5}>
         <Group justify="space-between">
-          <div>
-            <Burger
-              opened={opened}
-              onClick={toggle}
-              hiddenFrom="sm"
-              size="sm"
-            />
-          </div>
+          <Box
+            component={Image}
+            src="/icon.png"
+            alt="Logo"
+            width={32}
+            height={32}
+            visibleFrom="sm"
+          />
+          <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
           <UserButton afterSignOutUrl="/" />
         </Group>
       </AppShell.Header>
