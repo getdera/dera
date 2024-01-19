@@ -2,6 +2,7 @@ import { BadRequestException } from '@nestjs/common';
 
 export enum SubscriptionPlan {
   FREE = 'FREE',
+  LEGENDARY = 'LEGENDARY', // no limits on anything, we use it for development and testing
 }
 
 export type SubscriptionPlanLimits = {
@@ -17,12 +18,20 @@ export const FreePlanLimits: SubscriptionPlanLimits = {
   apiRequestsPerMinute: 20,
 };
 
+export const LegendaryPlanLimits: SubscriptionPlanLimits = {
+  users: undefined,
+  projects: undefined,
+  apiRequestsPerMinute: undefined,
+};
+
 export function getSubscriptionPlanLimits(
   plan: SubscriptionPlan,
 ): SubscriptionPlanLimits {
   switch (plan) {
     case SubscriptionPlan.FREE:
       return FreePlanLimits;
+    case SubscriptionPlan.LEGENDARY:
+      return LegendaryPlanLimits;
     default:
       throw new BadRequestException(`Unknown subscription plan: ${plan}`);
   }
