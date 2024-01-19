@@ -1,0 +1,21 @@
+.projectButtonRoot {
+  & :hover {
+    .arrow {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  .arrow {
+    transition: all 0.2s ease-out;
+    transform: scale(0.3);
+    transform-origin: left center;
+    opacity: 0;
+  }
+
+  .projectName {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+  }
+}
