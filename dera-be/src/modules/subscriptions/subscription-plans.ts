@@ -9,7 +9,7 @@ export type SubscriptionPlanLimits = {
   // these are maximums
   users?: number;
   projects?: number;
-  apiRequestsPerMinute?: number;
+  apiRequestsPerMinute: number;
 };
 
 export const FreePlanLimits: SubscriptionPlanLimits = {
@@ -21,7 +21,7 @@ export const FreePlanLimits: SubscriptionPlanLimits = {
 export const LegendaryPlanLimits: SubscriptionPlanLimits = {
   users: undefined,
   projects: undefined,
-  apiRequestsPerMinute: undefined,
+  apiRequestsPerMinute: 60,
 };
 
 export function getSubscriptionPlanLimits(

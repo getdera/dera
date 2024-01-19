@@ -62,4 +62,15 @@ export class DefaultSubscriptionsService implements SubscriptionsService {
     }
     return numProjects < limits.projects;
   }
+
+  async getApiRequestsPerMinuteLimit(orgId: string): Promise<number> {
+    const subscription = await this.getSubscription(orgId);
+    if (!subscription) {
+      this.logger.error('Missing subscription for orgId: ' + orgId);
+      return 0;
+    }
+
+    const limits = getSubscriptionPlanLimits(subscription.plan);
+    return limits.apiRequestsPerMinute;
+  }
 }

@@ -35,4 +35,9 @@ export class NoopSubscriptionsService implements SubscriptionsService {
     // when subscriptions are disabled, there are no limits
     return true;
   }
+
+  async getApiRequestsPerMinuteLimit(orgId: string): Promise<number> {
+    // when subscriptions are disabled, there are no limits
+    return 1000000;
+  }
 }

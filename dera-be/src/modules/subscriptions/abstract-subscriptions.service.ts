@@ -15,4 +15,6 @@ export abstract class SubscriptionsService {
     orgId: string,
     numProjects: number,
   ): Promise<boolean>;
+
+  abstract getApiRequestsPerMinuteLimit(orgId: string): Promise<number>;
 }
