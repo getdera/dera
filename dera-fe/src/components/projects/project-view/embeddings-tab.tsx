@@ -1,16 +1,7 @@
 'use client';
 
 import { useAuth } from '@clerk/nextjs';
-import {
-  Button,
-  Card,
-  Container,
-  Drawer,
-  Flex,
-  Grid,
-  Stack,
-  Text,
-} from '@mantine/core';
+import { Button, Card, Drawer, Flex, Grid, Stack, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconArrowNarrowRight } from '@tabler/icons-react';
 import Link from 'next/link';
@@ -142,10 +133,10 @@ const ProjectEmbeddingsTab = (
   }
 
   return (
-    <Container fluid className="mt-6">
+    <div>
       {createEmbeddingSchemaDrawer}
       {mainComponent}
-    </Container>
+    </div>
   );
 };
 

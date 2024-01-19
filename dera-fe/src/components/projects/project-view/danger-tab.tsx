@@ -1,11 +1,11 @@
 'use client';
 
-import { Button, Grid, Text } from '@mantine/core';
-import { modals } from '@mantine/modals';
-import { deleteProject } from '../../../lib/dera-client/dera.client';
 import { useAuth } from '@clerk/nextjs';
-import { showErrorNotification } from '../../../lib/utils';
+import { Button, Stack, Text } from '@mantine/core';
+import { modals } from '@mantine/modals';
 import { useRouter } from 'next/navigation';
+import { deleteProject } from '../../../lib/dera-client/dera.client';
+import { showErrorNotification } from '../../../lib/utils';
 
 export type ProjectDangerTabProps = {
   orgId: string;
@@ -50,16 +50,14 @@ const ProjectDangerTab = ({ orgId, projectId }: ProjectDangerTabProps) => {
   };
 
   return (
-    <Grid className="mt-4">
-      <Grid.Col span={12}>
-        <Button color="red" size="sm" onClick={openModal}>
-          Delete project
-        </Button>
-        <Text size="sm" c="dimmed">
-          This will delete all data in this project.
-        </Text>
-      </Grid.Col>
-    </Grid>
+    <Stack align="start" gap="xs">
+      <Button color="red" size="sm" onClick={openModal}>
+        Delete project
+      </Button>
+      <Text size="sm" c="dimmed">
+        This will delete all data in this project.
+      </Text>
+    </Stack>
   );
 };
 

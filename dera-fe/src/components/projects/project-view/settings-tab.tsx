@@ -1,16 +1,16 @@
 'use client';
 
+import { useAuth } from '@clerk/nextjs';
 import { Button, Table, Text, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
+import { useState } from 'react';
+import { updateProject } from '../../../lib/dera-client/dera.client';
 import { ProjectResponse } from '../../../lib/dera-client/types/projects';
-import { projectDetailsValidation } from '../validations';
-import { useAuth } from '@clerk/nextjs';
 import {
   showErrorNotification,
   showSuccessNotification,
 } from '../../../lib/utils';
-import { updateProject } from '../../../lib/dera-client/dera.client';
-import { useState } from 'react';
+import { projectDetailsValidation } from '../validations';
 
 export type ProjectSettingsTabProps = {
   project: ProjectResponse;
@@ -77,7 +77,7 @@ const ProjectSettingsTab = (props: ProjectSettingsTabProps) => {
 
   return (
     <form onSubmit={form.onSubmit((values) => submitUpdateProject(values))}>
-      <Table withTableBorder verticalSpacing="xl" mt="xl">
+      <Table withTableBorder verticalSpacing="md">
         <Table.Tbody>
           <Table.Tr>
             <Table.Td width="25%">
@@ -116,13 +116,7 @@ const ProjectSettingsTab = (props: ProjectSettingsTabProps) => {
           <Table.Tr>
             <Table.Td colSpan={2} align="right">
               {/* FEAT: add a reset button to reset to initial values and also enable submit button only when any values changed. */}
-              <Button
-                size="xs"
-                type="submit"
-                variant="light"
-                color="red"
-                disabled={saveButtonDisabled}
-              >
+              <Button size="xs" type="submit" disabled={saveButtonDisabled}>
                 Save changes
               </Button>
             </Table.Td>
