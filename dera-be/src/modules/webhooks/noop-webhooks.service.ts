@@ -6,8 +6,8 @@ export class NoopWebhooksService implements WebhooksService {
   private readonly logger = new Logger(NoopWebhooksService.name);
 
   constructor() {
-    this.logger.log(
-      'Subscriptions are not enabled: NoopWebhooksService is injected.',
+    this.logger.warn(
+      'Subscriptions are NOT enabled: NoopWebhooksService is injected.',
     );
   }
 

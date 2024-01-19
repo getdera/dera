@@ -13,8 +13,8 @@ import { SubscriptionsService } from './abstract-subscriptions.service';
 export class NoopSubscriptionsService implements SubscriptionsService {
   private readonly logger = new Logger(NoopSubscriptionsService.name);
   constructor() {
-    this.logger.log(
-      'Subscriptions are not enabled: NoopSubscriptionsService is injected.',
+    this.logger.warn(
+      'Subscriptions are NOT enabled: NoopSubscriptionsService is injected.',
     );
   }
 
