@@ -1,7 +1,7 @@
 import { ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { IS_SDK_API } from '../../utils/constants';
+import { IS_SDK_API, IS_WEBHOOK } from '../../utils/constants';
 
 @Injectable()
 export class BearerAuthGuard extends AuthGuard('bearer') {
@@ -15,6 +15,14 @@ export class BearerAuthGuard extends AuthGuard('bearer') {
       context.getClass(),
     ]);
     if (isSdkApi) {
+      return true;
+    }
+
+    const isWebhook = this.reflector.getAllAndOverride<boolean>(IS_WEBHOOK, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+    if (isWebhook) {
       return true;
     }
 

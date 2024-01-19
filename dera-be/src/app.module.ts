@@ -14,6 +14,7 @@ import { SdkApisModule } from './modules/sdk-apis/sdk-apis.module';
 import { SdkTokensModule } from './modules/sdk-tokens/sdk-tokens.module';
 import { EmbeddingsModule } from './modules/embeddings/embeddings.module';
 import { MatchingModule } from './modules/matching/matching.module';
+import { WebhooksModule } from './modules/webhooks/webhooks.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { MatchingModule } from './modules/matching/matching.module';
     SdkApisModule,
     SdkTokensModule,
     MatchingModule,
+    WebhooksModule,
   ],
   providers: [
     {
