@@ -25,6 +25,11 @@ export default function RootLayout({
       <html lang="en">
         <head>
           <ColorSchemeScript forceColorScheme="dark" />
+          <link rel="shortcut icon" href="/icon.png" />
+          <meta
+            name="viewport"
+            content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
+          />
         </head>
         <body>
           <MantineProvider theme={theme} forceColorScheme="dark">

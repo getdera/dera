@@ -29,7 +29,7 @@ export const LandingHero = () => {
         Retrieval-Augmented Generation (RAG) applications.
       </div>
       <div>
-        <GetStartedButton />
+        <GetStartedButton size="xl" />
       </div>
     </div>
   );

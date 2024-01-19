@@ -3,6 +3,7 @@
 import { Overlay, createTheme } from '@mantine/core';
 
 const theme = createTheme({
+  primaryColor: 'violet',
   defaultRadius: 'md',
   components: {
     Overlay: Overlay.extend({

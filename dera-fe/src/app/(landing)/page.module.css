@@ -1,0 +1,7 @@
+.gridReverse {
+  @media (min-width: $mantine-breakpoint-md) {
+    > *:nth-child(1) {
+      order: 1;
+    }
+  }
+}

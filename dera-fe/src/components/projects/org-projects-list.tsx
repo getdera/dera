@@ -117,6 +117,7 @@ const OrgProjectsList = () => {
                         component={Link}
                         classNames={{
                           root: classes.projectButtonRoot,
+                          label: classes.projectButtonRootLabel,
                         }}
                         href={`/orgs/${orgProjects.orgId}/projects/${project.id}`}
                         p="lg"
@@ -143,6 +144,7 @@ const OrgProjectsList = () => {
                               <Text
                                 size="sm"
                                 c="dimmed"
+                                ta="left"
                                 classNames={{
                                   root: classes.projectName,
                                 }}
