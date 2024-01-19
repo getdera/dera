@@ -1,5 +1,10 @@
 import { Type } from 'class-transformer';
-import { IsOptional, IsString, ValidateNested } from 'class-validator';
+import {
+  IsBoolean,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 
 export class CreateProjectRequest {
   @IsString()
@@ -51,4 +56,7 @@ export class ListProjectsResponse {
   @ValidateNested({ each: true })
   @Type(() => ProjectResponse)
   projects: ProjectResponse[];
+
+  @IsBoolean()
+  projectLimitsReached: boolean;
 }
