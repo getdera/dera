@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  CanActivate,
   ExecutionContext,
   Injectable,
   UnauthorizedException,
@@ -9,6 +8,12 @@ import { validate as uuidValidate } from 'uuid';
 import { SdkTokensService } from './sdk-tokens.service';
 import { Request } from 'express';
 import { EmbeddingSchemasService } from '../embedding-schemas/embedding-schemas.service';
+import {
+  ThrottlerGuard,
+  ThrottlerModuleOptions,
+  ThrottlerStorage,
+} from '@nestjs/throttler';
+import { Reflector } from '@nestjs/core';
 
 const SDK_API_TOKEN_KEY_HEADER = 'x-dera-token-key';
 const SDK_API_TOKEN_SECRET_HEADER = 'x-dera-token-secret';
@@ -25,11 +30,16 @@ export type SdkApiAuthedRequest = Request & {
  * Check caller is authenticated and is authorized to access the embedding schema. Must be used on URLs that have an embeddingSchemaId path param.
  */
 @Injectable()
-export class SdkApiAuthGuard implements CanActivate {
+export class SdkApiAuthGuard extends ThrottlerGuard {
   constructor(
+    protected options: ThrottlerModuleOptions,
+    protected storage: ThrottlerStorage,
+    protected reflector: Reflector,
     private readonly sdkTokensService: SdkTokensService,
     private readonly embeddingSchemasService: EmbeddingSchemasService,
-  ) {}
+  ) {
+    super(options, storage, reflector);
+  }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
@@ -58,17 +68,20 @@ export class SdkApiAuthGuard implements CanActivate {
       return false;
     }
 
-    if (!(await this.hasAccessToEmbeddingSchema(request, orgDetails.orgId))) {
-      return false;
-    } else {
-      request.apiCaller = {
-        org: {
-          id: orgDetails.orgId,
-        },
-      };
+    // our throttler guard and the remaining checks below expects this
+    request.apiCaller = {
+      org: {
+        id: orgDetails.orgId,
+      },
+    };
 
-      return true;
-    }
+    // an exception will be thrown if the request is throttled and the execution will stop here
+    await super.canActivate(context);
+
+    return await this.hasAccessToEmbeddingSchema(
+      request,
+      request.apiCaller.org.id,
+    );
   }
 
   private async hasAccessToEmbeddingSchema(

@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ProjectEntity } from './project.entity';
 import { Repository } from 'typeorm';
 import { NeonService } from '../neon/neon.service';
+import { SubscriptionsService } from '../subscriptions/abstract-subscriptions.service';
 
 @Injectable()
 export class ProjectsService {
@@ -15,6 +16,7 @@ export class ProjectsService {
     @InjectRepository(ProjectEntity)
     private readonly projectsRepository: Repository<ProjectEntity>,
     private readonly neonService: NeonService,
+    private readonly subscriptionsService: SubscriptionsService,
   ) {}
 
   async createProject(
@@ -23,6 +25,24 @@ export class ProjectsService {
     name: string,
     description: string | null,
   ): Promise<ProjectEntity> {
+    const numProjectsInOrg = await this.projectsRepository.count({
+      where: {
+        orgId,
+      },
+    });
+
+    const numProjectsIsBelowLimit =
+      await this.subscriptionsService.numProjectsIsBelowPlanLimits(
+        orgId,
+        numProjectsInOrg,
+      );
+
+    if (!numProjectsIsBelowLimit) {
+      throw new BadRequestException(
+        'You have reached your project limit. Please upgrade your subscription to create more projects.',
+      );
+    }
+
     const neonProject = await this.neonService.createProject(name);
     if (!neonProject) {
       throw new InternalServerErrorException(
@@ -50,8 +70,12 @@ export class ProjectsService {
     return this.projectsRepository.save(projectEntity);
   }
 
-  async listProjectsInOrg(orgId: string): Promise<ProjectEntity[]> {
-    return this.projectsRepository.find({
+  async listProjectsInOrg(orgId: string): Promise<{
+    projects: ProjectEntity[];
+    projectLimitsReached: boolean;
+  }> {
+    // if we ever do pagination, the input that we pass in to numProjectsIsBelowPlanLimits() below must be updated
+    const projects = await this.projectsRepository.find({
       where: {
         orgId,
       },
@@ -59,6 +83,17 @@ export class ProjectsService {
         createdAt: 'DESC',
       },
     });
+
+    const numProjectsIsBelowLimit =
+      await this.subscriptionsService.numProjectsIsBelowPlanLimits(
+        orgId,
+        projects.length,
+      );
+
+    return {
+      projects,
+      projectLimitsReached: !numProjectsIsBelowLimit,
+    };
   }
 
   async getProject(orgId: string, projectId: string): Promise<ProjectEntity> {

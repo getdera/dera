@@ -67,12 +67,13 @@ export class ProjectsController {
   async listProjectsInOrg(
     @Param('orgId') orgId: string,
   ): Promise<ListProjectsResponse> {
-    const projectEntities = await this.projectsService.listProjectsInOrg(orgId);
+    const res = await this.projectsService.listProjectsInOrg(orgId);
 
     return {
-      projects: projectEntities.map((pe) =>
+      projects: res.projects.map((pe) =>
         projectEntityToProjectResponse(pe, this.showNeonIdsInApi),
       ),
+      projectLimitsReached: res.projectLimitsReached,
     };
   }
 

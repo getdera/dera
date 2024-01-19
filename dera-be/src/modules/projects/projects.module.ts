@@ -6,9 +6,14 @@ import { ProjectEntity } from './project.entity';
 import { NeonModule } from '../neon/neon.module';
 import { ConfigService } from '@nestjs/config';
 import { boolean } from 'boolean';
+import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ProjectEntity]), NeonModule],
+  imports: [
+    TypeOrmModule.forFeature([ProjectEntity]),
+    NeonModule,
+    SubscriptionsModule,
+  ],
   providers: [
     ProjectsService,
     {
