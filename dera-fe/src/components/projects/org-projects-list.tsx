@@ -1,12 +1,13 @@
 'use client';
 
-import { Card, Flex, Group, Text, Grid } from '@mantine/core';
-import React, { useEffect } from 'react';
-import { useState } from 'react';
-import { showErrorNotification } from '../../lib/utils';
 import { useAuth, useOrganizationList } from '@clerk/nextjs';
+import { Button, Flex, Grid, Group, Stack, Text } from '@mantine/core';
+import { IconArrowNarrowRight } from '@tabler/icons-react';
+import Link from 'next/link';
+import React, { useEffect, useState } from 'react';
 import { listProjectsInOrg } from '../../lib/dera-client/dera.client';
-import { IconChevronRight } from '@tabler/icons-react';
+import { showErrorNotification } from '../../lib/utils';
+import classes from './org-projects-list.module.css';
 
 export type OrgProjects = {
   orgName: string;
@@ -112,33 +113,53 @@ const OrgProjectsList = () => {
                 {orgProjects.projects.map((project) => {
                   return (
                     <Grid.Col span={{ base: 12, md: 4 }} key={project.id}>
-                      <Card
-                        component="a"
+                      <Button
+                        component={Link}
+                        classNames={{
+                          root: classes.projectButtonRoot,
+                        }}
                         href={`/orgs/${orgProjects.orgId}/projects/${project.id}`}
-                        shadow="sm"
-                        padding="lg"
-                        radius="md"
-                        withBorder
+                        p="lg"
+                        variant="default"
+                        w="100%"
                         style={{ minHeight: '200px', overflow: 'auto' }}
                       >
-                        <Group justify="space-between" mt="md" mb="xs">
-                          <Text fw={500}>{project.name}</Text>
-                          <IconChevronRight />
-                        </Group>
-                        {project.neonProjectId && (
+                        <Stack gap={0} w="100%" align="start">
+                          <Group
+                            justify="space-between"
+                            mt="md"
+                            mb="xs"
+                            wrap="nowrap"
+                            w="100%"
+                          >
+                            <Text fw={500}>{project.name}</Text>
+                            <IconArrowNarrowRight className={classes.arrow} />
+                          </Group>
+                          {project.neonProjectId && (
+                            <>
+                              <Text size="sm" c="dimmed">
+                                Neon project ID:
+                              </Text>
+                              <Text
+                                size="sm"
+                                c="dimmed"
+                                classNames={{
+                                  root: classes.projectName,
+                                }}
+                              >
+                                {project.neonProjectId}
+                              </Text>
+                            </>
+                          )}
                           <Text size="sm" c="dimmed">
-                            Neon project ID:
-                            {project.neonProjectId}
+                            Created:
+                            {project.createdAt.toLocaleDateString()}
                           </Text>
-                        )}
-                        <Text size="sm" c="dimmed">
-                          Created:
-                          {project.createdAt.toLocaleDateString()}
-                        </Text>
-                        <Group justify="space-between" mt="md" mb="xs">
-                          &nbsp;
-                        </Group>
-                      </Card>
+                          <Group justify="space-between" mt="md" mb="xs">
+                            &nbsp;
+                          </Group>
+                        </Stack>
+                      </Button>
                     </Grid.Col>
                   );
                 })}

@@ -1,20 +1,44 @@
-import { Container } from '@mantine/core';
-import Navbar from '../../components/navbar/navbar';
+'use client';
+
+import { UserButton } from '@clerk/nextjs';
+import { AppShell, Burger, Container, Group } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import Sidebar from '../../components/sidebar/sidebar';
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
+  const [opened, { toggle }] = useDisclosure();
+
   return (
-    <div className="h-full relative">
-      <div className="hidden h-full md:flex md:w-72 md:flex-col md:fixed md:inset-y-0 z-[80]">
+    <AppShell
+      header={{ height: 48 }}
+      navbar={{
+        width: 288,
+        breakpoint: 'sm',
+        collapsed: { mobile: !opened },
+      }}
+      padding="md"
+    >
+      <AppShell.Header p={5}>
+        <Group justify="space-between">
+          <div>
+            <Burger
+              opened={opened}
+              onClick={toggle}
+              hiddenFrom="sm"
+              size="sm"
+            />
+          </div>
+          <UserButton afterSignOutUrl="/" />
+        </Group>
+      </AppShell.Header>
+
+      <AppShell.Navbar p="md">
         <Sidebar />
-      </div>
-      <main className="md:pl-72">
-        <Navbar />
-        <Container fluid className="pt-5 pl-3">
-          {children}
-        </Container>
-      </main>
-    </div>
+      </AppShell.Navbar>
+      <AppShell.Main>
+        <Container fluid>{children}</Container>
+      </AppShell.Main>
+    </AppShell>
   );
 };
 

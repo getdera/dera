@@ -1,24 +1,26 @@
 'use client';
 
+import { useAuth } from '@clerk/nextjs';
 import {
+  Button,
   Card,
   Container,
-  Flex,
-  Text,
-  Button,
   Drawer,
+  Flex,
   Grid,
-  Group,
+  Stack,
+  Text,
 } from '@mantine/core';
-import { ProjectResponse } from '../../../lib/dera-client/types/projects';
-import { useEffect, useState } from 'react';
-import { EmbeddingSchemaResponse } from '../../../lib/dera-client/types/embedding-schema';
 import { useDisclosure } from '@mantine/hooks';
-import { useAuth } from '@clerk/nextjs';
-import { showErrorNotification } from '../../../lib/utils';
+import { IconArrowNarrowRight } from '@tabler/icons-react';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { listEmbeddingSchemasInProject } from '../../../lib/dera-client/dera.client';
+import { EmbeddingSchemaResponse } from '../../../lib/dera-client/types/embedding-schema';
+import { ProjectResponse } from '../../../lib/dera-client/types/projects';
+import { showErrorNotification } from '../../../lib/utils';
 import CreateEmbeddingSchemaForm from './create-embedding-schema-form';
-import { IconChevronRight } from '@tabler/icons-react';
+import classes from './embeddings-tab.module.css';
 
 export type ProjectEmbeddingsTabProps = {
   project: ProjectResponse;
@@ -105,28 +107,32 @@ const ProjectEmbeddingsTab = (
           {embeddingSchemas.map((embeddingSchema) => {
             return (
               <Grid.Col span={{ base: 12, md: 4 }} key={embeddingSchema.id}>
-                <Card
-                  component="a"
+                <Button
+                  component={Link}
+                  classNames={{
+                    root: classes.embeddingSchemaButton,
+                  }}
                   href={`/orgs/${project.orgId}/projects/${project.id}/embedding-schemas/${embeddingSchema.id}`}
-                  shadow="sm"
-                  padding="lg"
+                  p="lg"
                   radius="md"
-                  withBorder
                   style={{ minHeight: '200px', overflow: 'auto' }}
+                  variant="default"
                 >
-                  <Group justify="space-between" mt="md" mb="xs">
+                  <Stack gap={4} align="flex-start" justify="start" h="100%">
+                    <IconArrowNarrowRight
+                      className={classes.arrow}
+                      size="1rem"
+                    />
                     <Text fw={500}>{embeddingSchema.name}</Text>
-                    <IconChevronRight />
-                  </Group>
-                  <Text c="dimmed">{embeddingSchema.description}</Text>
-                  <Text size="sm" c="dimmed">
-                    Created:
-                    {embeddingSchema.createdAt.toLocaleDateString()}
-                  </Text>
-                  <Group justify="space-between" mt="md" mb="xs">
-                    &nbsp;
-                  </Group>
-                </Card>
+                    {embeddingSchema.description && (
+                      <Text c="dimmed">{embeddingSchema.description}</Text>
+                    )}
+                    <Text size="sm" c="dimmed">
+                      Created:
+                      {embeddingSchema.createdAt.toLocaleDateString()}
+                    </Text>
+                  </Stack>
+                </Button>
               </Grid.Col>
             );
           })}
