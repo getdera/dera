@@ -1,13 +1,13 @@
 .projectButtonRoot {
   & :hover {
     .arrow {
-      transform: scale(1);
+      transform: translateX(0px);
       opacity: 1;
     }
   }
   .arrow {
     transition: all 0.2s ease-out;
-    transform: scale(0.3);
+    transform: translateX(-10px);
     transform-origin: left center;
     opacity: 0;
   }

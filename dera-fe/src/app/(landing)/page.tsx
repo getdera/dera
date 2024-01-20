@@ -24,7 +24,7 @@ import classes from './page.module.css';
 
 const LandingPage = () => {
   return (
-    <Container>
+    <Container size="lg">
       <Stack gap={60}>
         <LandingHero />
 

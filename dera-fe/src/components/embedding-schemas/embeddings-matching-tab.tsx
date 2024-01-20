@@ -1,20 +1,20 @@
 'use client';
 
 import { useAuth } from '@clerk/nextjs';
-import { showErrorNotification } from '../../lib/utils';
-import { listMatchQueriesInSchema } from '../../lib/dera-client/dera.client';
-import { useEffect, useState } from 'react';
-import { ActionIcon, Group, Modal, Paper, Text, Tooltip } from '@mantine/core';
+import { ActionIcon, Group, Paper, Text, Tooltip } from '@mantine/core';
+import { modals } from '@mantine/modals';
+import { IconEye } from '@tabler/icons-react';
 import {
   DataTable,
   DataTableRowClickHandler,
   useDataTableColumns,
 } from 'mantine-datatable';
+import { useEffect, useState } from 'react';
+import { listMatchQueriesInSchema } from '../../lib/dera-client/dera.client';
 import { MatchQueryResp } from '../../lib/dera-client/types/embedding-match-queries-results';
+import { showErrorNotification } from '../../lib/utils';
 import LoadingAnimation from '../projects/project-view/loading-animation';
-import { useDisclosure } from '@mantine/hooks';
 import MatchQueryWithResultsDetailsComponent from './match-query-with-results-component';
-import { IconEye } from '@tabler/icons-react';
 
 export type EmbeddingsMatchingTabProps = {
   orgId: string;
@@ -31,11 +31,6 @@ const EmbeddingsMatchingTab = (props: EmbeddingsMatchingTabProps) => {
   const [currentPage, setCurrentPage] = useState<number>(-1);
   const [hasNextPage, setHasNextPage] = useState<boolean>(false);
   const [rows, setRows] = useState<MatchQueryResp[]>([]);
-  const [matchQueryInView, setMatchQueryInView] =
-    useState<MatchQueryResp | null>(null);
-
-  const [modalOpened, { open: openModal, close: closeModal }] =
-    useDisclosure(false);
 
   const storeColumnsKey = `col-key-schema-${embeddingSchemaId}-queries`;
 
@@ -50,7 +45,7 @@ const EmbeddingsMatchingTab = (props: EmbeddingsMatchingTabProps) => {
         width: 50,
         render: (record) => (
           <Tooltip label="View results">
-            <ActionIcon size="xs">
+            <ActionIcon size="sm" variant="default">
               <IconEye />
             </ActionIcon>
           </Tooltip>
@@ -113,13 +108,15 @@ const EmbeddingsMatchingTab = (props: EmbeddingsMatchingTabProps) => {
   };
 
   const onMatchQueryClick: DataTableRowClickHandler<MatchQueryResp> = (row) => {
-    setMatchQueryInView(row.record);
-    openModal();
-  };
+    const matchQueryInView = row.record;
 
-  const onModalClose = () => {
-    setMatchQueryInView(null);
-    closeModal();
+    modals.open({
+      size: '100%',
+      title: `Match Query ${matchQueryInView.id}`,
+      children: (
+        <MatchQueryWithResultsDetailsComponent matchQuery={matchQueryInView} />
+      ),
+    });
   };
 
   const loadMoreRows = async () => {
@@ -134,19 +131,6 @@ const EmbeddingsMatchingTab = (props: EmbeddingsMatchingTabProps) => {
 
   return (
     <>
-      {matchQueryInView ? (
-        <Modal
-          opened={modalOpened}
-          onClose={onModalClose}
-          size="100%"
-          title={`Match Query ${matchQueryInView.id}`}
-          centered
-        >
-          <MatchQueryWithResultsDetailsComponent
-            matchQuery={matchQueryInView}
-          />
-        </Modal>
-      ) : null}
       <Paper p="md" mt="sm" mb="sm" withBorder>
         <Group justify="space-between">
           <Text size="sm">Showing {rows.length} records</Text>
@@ -154,7 +138,7 @@ const EmbeddingsMatchingTab = (props: EmbeddingsMatchingTabProps) => {
       </Paper>
       {/* BUG: highlightOnHover and sticky header does not work. Unsure if related to order of CSS imports. */}
       <DataTable
-        borderRadius="sm"
+        borderRadius="md"
         striped
         highlightOnHover
         height={600}

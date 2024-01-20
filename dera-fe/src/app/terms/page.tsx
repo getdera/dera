@@ -6,7 +6,7 @@ export default function Terms() {
     <Container>
       <h2>Terms of Service</h2>
 
-      <p>Last modified: Jan 19, 2024</p>
+      <p>Last modified: Jan 20, 2024</p>
 
       <h3>1. Introduction</h3>
 
@@ -27,8 +27,8 @@ export default function Terms() {
         declarations are effective. If the User does not agree to apply under
         the provisions of the Terms, he/she should not use the Service. In such
         a case however, the User may contact the Company by emailing at{' '}
-        <a href={`mailto:${contact}`}>support@{domain}</a> so the Company can
-        try to find a solution.
+        <a href={`mailto:${contact}`}>{contact}</a> so the Company can try to
+        find a solution.
       </p>
       <h3>2. Definitions</h3>
       <p>
@@ -94,12 +94,12 @@ export default function Terms() {
         also allows entering text messages in the amount and configuration
         invented by the User however containing at least 8 signs.
       </p>
-      <p>
+      {/* <p>
         <b>Privacy Policy</b> – means the Privacy Policy, which defines the
         rules of personal data processing by the Company, available under the
         following internet address:{' '}
         <a href={`https://${domain}/privacy`}>https://{domain}/privacy</a>.
-      </p>
+      </p> */}
       <p>
         <b>Service</b> – means together the Website and/or the API (depending on
         the scope dedicated to a given User pursuant to the Agreement).
@@ -205,28 +205,27 @@ export default function Terms() {
         conditions unless you cancel it or the Company cancels it. You may
         cancel your Subscription renewal either through your Account or by
         contacting Company’s customer support team at{' '}
-        <a href={`mailto:${contact}`}>support@{domain}</a>. A valid payment
-        method, including credit or debit card, Apple Pay or Google Pay, is
-        required to process the payment for your subscription. You shall provide
-        the Company with accurate and complete billing information including (i)
-        full name, (ii) email address, (iii) country, (iv) business’s legal
-        entity name, (v) VAT tax number and (vi) a valid payment method
-        information. By submitting such payment information, you automatically
-        authorize Company to charge all Subscription fees incurred through your
-        Account to any such payment instruments. Should automatic billing fail
-        to occur for any reason, Company will issue an electronic invoice
-        indicating that you must proceed manually, within a certain deadline
-        date, with the full payment corresponding to the billing period as
-        indicated on the invoice. We reserve the right to refuse or cancel your
-        order at any time for reasons including but not limited to: service
-        availability, errors in the description or price of the service, error
-        in your order or other reasons. We reserve the right to refuse or cancel
-        your order if fraud or an unauthorized or illegal transaction is
-        suspected. Company is not responsible for any additional fees, including
-        taxes, imposed by the relevant authorities of the country in which the
-        person submitting an order resides / is located. Payment of these
-        additional fees remains the responsibility of the person submitting the
-        order.
+        <a href={`mailto:${contact}`}>{contact}</a>. A valid payment method,
+        including credit or debit card, Apple Pay or Google Pay, is required to
+        process the payment for your subscription. You shall provide the Company
+        with accurate and complete billing information including (i) full name,
+        (ii) email address, (iii) country, (iv) business’s legal entity name,
+        (v) VAT tax number and (vi) a valid payment method information. By
+        submitting such payment information, you automatically authorize Company
+        to charge all Subscription fees incurred through your Account to any
+        such payment instruments. Should automatic billing fail to occur for any
+        reason, Company will issue an electronic invoice indicating that you
+        must proceed manually, within a certain deadline date, with the full
+        payment corresponding to the billing period as indicated on the invoice.
+        We reserve the right to refuse or cancel your order at any time for
+        reasons including but not limited to: service availability, errors in
+        the description or price of the service, error in your order or other
+        reasons. We reserve the right to refuse or cancel your order if fraud or
+        an unauthorized or illegal transaction is suspected. Company is not
+        responsible for any additional fees, including taxes, imposed by the
+        relevant authorities of the country in which the person submitting an
+        order resides / is located. Payment of these additional fees remains the
+        responsibility of the person submitting the order.
       </p>
       <h3>8. Fee Changes</h3>
       <p>
@@ -411,8 +410,8 @@ export default function Terms() {
         copyright owner, or authorized on behalf of one, and you believe that
         the copyrighted work has been copied in a way that constitutes copyright
         Infringement, please submit your claim via email to{' '}
-        <a href={`mailto:${contact}`}>support@{domain}</a>, with the subject
-        line: “Copyright Infringement” and include in your claim a detailed
+        <a href={`mailto:${contact}`}>{contact}</a>, with the subject line:
+        “Copyright Infringement” and include in your claim a detailed
         description of the alleged Infringement as detailed below, under “DMCA
         Notice and Procedure for Copyright Infringement Claims”. You may be held
         accountable for damages (including costs and attorneys' fees) for
@@ -452,7 +451,7 @@ export default function Terms() {
       </ul>
       <p>
         You can contact our Copyright Agent via email at{' '}
-        <a href={`mailto:${contact}`}>support@{domain}</a>.
+        <a href={`mailto:${contact}`}>{contact}</a>.
       </p>
       <h3>16. Error Reporting and Feedback</h3>
       <p>
@@ -464,7 +463,7 @@ export default function Terms() {
       </p>
       <p>
         You may provide us directly at{' '}
-        <a href={`mailto:${contact}`}>support@{domain}</a> with information and
+        <a href={`mailto:${contact}`}>{contact}</a> with information and
         feedback concerning errors, suggestions for improvements, ideas,
         problems, complaints, and other matters related to our Service
         (“Feedback”). You acknowledge and agree that: (i) you shall not retain,
@@ -664,7 +663,7 @@ export default function Terms() {
       <h3>29. Contact Us</h3>
       <p>
         Any time you wish to contact the Company, please send email at:{' '}
-        <a href={`mailto:${contact}`}>support@{domain}</a>.
+        <a href={`mailto:${contact}`}>{contact}</a>.
       </p>
     </Container>
   );

@@ -1,5 +1,6 @@
 'use client';
 
+import { useAuth } from '@clerk/nextjs';
 import {
   ActionIcon,
   Autocomplete,
@@ -13,27 +14,26 @@ import {
   Tooltip,
   rem,
 } from '@mantine/core';
-import {
-  CreateEmbeddingSchemaFieldRequest,
-  CreateEmbeddingSchemaRequest,
-  EmbeddingSchemaDefaultFieldsResp,
-} from '../../../lib/dera-client/types/embedding-schema';
 import { useForm } from '@mantine/form';
 import { IconHelpCircleFilled, IconTrashFilled } from '@tabler/icons-react';
-import { ProjectResponse } from '../../../lib/dera-client/types/projects';
-import { useAuth } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import {
   createEmbeddingSchema,
   getEmbeddingSchemaDefaultFields,
 } from '../../../lib/dera-client/dera.client';
 import {
+  CreateEmbeddingSchemaFieldRequest,
+  CreateEmbeddingSchemaRequest,
+  EmbeddingSchemaDefaultFieldsResp,
+} from '../../../lib/dera-client/types/embedding-schema';
+import { ProjectResponse } from '../../../lib/dera-client/types/projects';
+import { PG_DATA_TYPES, PG_VECTOR_TYPES } from '../../../lib/pg-data-types';
+import {
   isValidPostgresIdentifier,
   showErrorNotification,
   showSuccessNotification,
 } from '../../../lib/utils';
-import { PG_DATA_TYPES, PG_VECTOR_TYPES } from '../../../lib/pg-data-types';
-import { useRouter } from 'next/navigation';
 import LoadingAnimation from './loading-animation';
 
 export type CreateEmbeddingSchemaFormProps = {
