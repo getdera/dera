@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth } from '@clerk/nextjs';
+import { useGetAuthToken } from '@/hooks/common';
 import {
   ActionIcon,
   Autocomplete,
@@ -64,7 +64,7 @@ const CreateEmbeddingSchemaForm = (
 ) => {
   const { project } = createEmbeddingSchemaFormProps;
 
-  const { getToken } = useAuth();
+  const { getAuthToken } = useGetAuthToken();
   const { push } = useRouter();
 
   const [defaultFields, setDefaultFields] =
@@ -111,9 +111,7 @@ const CreateEmbeddingSchemaForm = (
   });
 
   const getDefaultFields = async () => {
-    const token = await getToken({
-      template: process.env.NEXT_PUBLIC_JWT_TEMPLATE_NAME || undefined,
-    });
+    const token = await getAuthToken();
     if (!token) {
       setDefaultFields(null);
       showErrorNotification(
@@ -144,9 +142,7 @@ const CreateEmbeddingSchemaForm = (
     setIsSubmitting(true);
     setSubmitButtonDisabled(true);
 
-    const token = await getToken({
-      template: process.env.NEXT_PUBLIC_JWT_TEMPLATE_NAME || undefined,
-    });
+    const token = await getAuthToken();
     if (!token) {
       showErrorNotification(
         'Unable to send the request because no auth token was retrieved.',

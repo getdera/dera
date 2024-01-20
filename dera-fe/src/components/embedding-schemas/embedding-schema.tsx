@@ -1,16 +1,16 @@
 'use client';
 
-import { useAuth } from '@clerk/nextjs';
+import { useGetAuthToken } from '@/hooks/common';
 import { Container, Grid, Tabs, Text } from '@mantine/core';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { showErrorNotification } from '../../lib/utils';
 import { getEmbeddingSchema } from '../../lib/dera-client/dera.client';
 import { EmbeddingSchemaResponse } from '../../lib/dera-client/types/embedding-schema';
+import { showErrorNotification } from '../../lib/utils';
 import EmbeddingSchemaDataTab from './embedding-schema-data-tab';
 import EmbeddingSchemaUploadTab from './embedding-schema-upload-tab';
-import EmbeddingsMatchingTab from './embeddings-matching-tab';
 import EmbeddingsMatchingApiRefTab from './embeddings-matching-api-ref-tab';
+import EmbeddingsMatchingTab from './embeddings-matching-tab';
 
 const EmbeddingSchemaComponent = () => {
   const params = useParams<{
@@ -20,12 +20,10 @@ const EmbeddingSchemaComponent = () => {
   }>();
   const [embeddingSchema, setEmbeddingSchema] =
     useState<EmbeddingSchemaResponse | null>(null);
-  const { getToken } = useAuth();
+  const { getAuthToken } = useGetAuthToken();
 
   const getEmbbedingSchema = async () => {
-    const token = await getToken({
-      template: process.env.NEXT_PUBLIC_JWT_TEMPLATE_NAME || undefined,
-    });
+    const token = await getAuthToken();
 
     if (!token) {
       showErrorNotification(

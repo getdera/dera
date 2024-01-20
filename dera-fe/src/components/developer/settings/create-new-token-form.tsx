@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth } from '@clerk/nextjs';
+import { useGetAuthToken } from '@/hooks/common';
 import { Button, Grid, Group, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useState } from 'react';
@@ -25,7 +25,7 @@ const CreateNewTokenForm = (props: CreateNewTokenFormProps) => {
   const [submitButtonDisabled, setSubmitButtonDisabled] =
     useState<boolean>(false);
 
-  const { getToken } = useAuth();
+  const { getAuthToken } = useGetAuthToken();
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
@@ -42,9 +42,7 @@ const CreateNewTokenForm = (props: CreateNewTokenFormProps) => {
     setIsSubmitting(true);
     setSubmitButtonDisabled(true);
 
-    const token = await getToken({
-      template: process.env.NEXT_PUBLIC_JWT_TEMPLATE_NAME || undefined,
-    });
+    const token = await getAuthToken();
     if (!token) {
       showErrorNotification(
         'Unable to send the request because no auth token was retrieved.',

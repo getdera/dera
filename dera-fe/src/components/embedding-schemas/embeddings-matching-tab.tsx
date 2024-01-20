@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth } from '@clerk/nextjs';
+import { useGetAuthToken } from '@/hooks/common';
 import { ActionIcon, Group, Paper, Text, Tooltip } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { IconEye } from '@tabler/icons-react';
@@ -23,7 +23,7 @@ export type EmbeddingsMatchingTabProps = {
 };
 
 const EmbeddingsMatchingTab = (props: EmbeddingsMatchingTabProps) => {
-  const { getToken } = useAuth();
+  const { getAuthToken } = useGetAuthToken();
 
   const { orgId, embeddingSchemaId } = props;
 
@@ -80,9 +80,8 @@ const EmbeddingsMatchingTab = (props: EmbeddingsMatchingTabProps) => {
   const fetchMatchQueriesInSchema = async () => {
     try {
       setFetching(true);
-      const token = await getToken({
-        template: process.env.NEXT_PUBLIC_JWT_TEMPLATE_NAME || undefined,
-      });
+      const token = await getAuthToken();
+
       if (!token) {
         showErrorNotification(
           'The request was not sent because no auth token was retrieved.',

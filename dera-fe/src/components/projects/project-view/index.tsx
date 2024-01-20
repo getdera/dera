@@ -1,5 +1,5 @@
 'use client';
-import { useAuth } from '@clerk/nextjs';
+import { useGetAuthToken } from '@/hooks/common';
 import { Stack, Tabs, Text } from '@mantine/core';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -11,16 +11,14 @@ import ProjectEmbeddingsTab from './embeddings-tab';
 import ProjectSettingsTab from './settings-tab';
 
 const ProjectView = () => {
-  const { getToken } = useAuth();
+  const { getAuthToken } = useGetAuthToken();
   const [project, setProject] = useState<ProjectResponse | null>(null);
 
   const params = useParams<{ orgId: string; projectId: string }>();
 
   const getProjectReq = async () => {
     try {
-      const token = await getToken({
-        template: process.env.NEXT_PUBLIC_JWT_TEMPLATE_NAME || undefined,
-      });
+      const token = await getAuthToken();
       if (!token) {
         showErrorNotification(
           'The request was not sent because no auth token was retrieved.',

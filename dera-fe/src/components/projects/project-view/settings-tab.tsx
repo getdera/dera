@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth } from '@clerk/nextjs';
+import { useGetAuthToken } from '@/hooks/common';
 import { Button, Table, Text, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useState } from 'react';
@@ -28,7 +28,7 @@ const ProjectSettingsTab = (props: ProjectSettingsTabProps) => {
   const [project, setProject] = useState<ProjectResponse>(props.project);
   const [saveButtonDisabled, setSaveButtonDisabled] = useState<boolean>(false);
 
-  const { getToken } = useAuth();
+  const { getAuthToken } = useGetAuthToken();
   const form = useForm<UpdateProjectFormValues>({
     initialValues: {
       id: project.id,
@@ -43,9 +43,7 @@ const ProjectSettingsTab = (props: ProjectSettingsTabProps) => {
 
   const submitUpdateProject = async (values: UpdateProjectFormValues) => {
     setSaveButtonDisabled(true);
-    const token = await getToken({
-      template: process.env.NEXT_PUBLIC_JWT_TEMPLATE_NAME || undefined,
-    });
+    const token = await getAuthToken();
 
     if (!token) {
       setSaveButtonDisabled(false);

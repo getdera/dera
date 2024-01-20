@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth } from '@clerk/nextjs';
+import { useGetAuthToken } from '@/hooks/common';
 import { Button, Group, Paper, Stack, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useRouter } from 'next/navigation';
@@ -21,16 +21,14 @@ type CreateProjectFormValues = {
 };
 
 const CreateProjectForm = ({ org }: CreateProjectFormProps) => {
-  const { getToken } = useAuth();
+  const { getAuthToken } = useGetAuthToken();
   const { push } = useRouter();
   const [submitButtonDisabled, setSubmitButtonDisabled] =
     useState<boolean>(false);
 
   const submitCreateProject = async (values: CreateProjectFormValues) => {
     setSubmitButtonDisabled(true);
-    const token = await getToken({
-      template: process.env.NEXT_PUBLIC_JWT_TEMPLATE_NAME || undefined,
-    });
+    const token = await getAuthToken();
 
     if (!token) {
       setSubmitButtonDisabled(false);

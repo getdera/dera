@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth } from '@clerk/nextjs';
+import { useGetAuthToken } from '@/hooks/common';
 import { ActionIcon, Grid, Group, Text, Title, Tooltip } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { IconChevronRight, IconEye } from '@tabler/icons-react';
@@ -95,7 +95,7 @@ const MatchQueryWithResultsDetailsComponent = (
 ) => {
   const { matchQuery } = props;
 
-  const { getToken } = useAuth();
+  const { getAuthToken } = useGetAuthToken();
 
   const [fetching, setFetching] = useState<boolean>(true);
   const [matchResults, setMatchResults] = useState<MatchQueryResultResp[]>([]);
@@ -129,9 +129,8 @@ const MatchQueryWithResultsDetailsComponent = (
   const fetchMatchResultsForQuery = async () => {
     try {
       setFetching(true);
-      const token = await getToken({
-        template: process.env.NEXT_PUBLIC_JWT_TEMPLATE_NAME || undefined,
-      });
+      const token = await getAuthToken();
+
       if (!token) {
         showErrorNotification(
           'The request was not sent because no auth token was retrieved.',

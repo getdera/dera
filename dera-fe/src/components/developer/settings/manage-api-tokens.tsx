@@ -1,6 +1,7 @@
 'use client';
 
-import { useAuth, useOrganization } from '@clerk/nextjs';
+import { useGetAuthToken } from '@/hooks/common';
+import { useOrganization } from '@clerk/nextjs';
 import { OrganizationResource } from '@clerk/types';
 import {
   ActionIcon,
@@ -43,12 +44,10 @@ const ManageApiTokensComponent = () => {
 
   const [opened, { open, close }] = useDisclosure(false);
 
-  const { getToken } = useAuth();
+  const { getAuthToken } = useGetAuthToken();
 
   const fetchOrgApiTokens = async (organization: OrganizationResource) => {
-    const token = await getToken({
-      template: process.env.NEXT_PUBLIC_JWT_TEMPLATE_NAME || undefined,
-    });
+    const token = await getAuthToken();
     if (!token) {
       showErrorNotification(
         'The request was not sent because no auth token was retrieved.',
@@ -118,9 +117,7 @@ const ManageApiTokensComponent = () => {
   };
 
   const revokeToken = async (orgId: string, tokenId: string) => {
-    const token = await getToken({
-      template: process.env.NEXT_PUBLIC_JWT_TEMPLATE_NAME || undefined,
-    });
+    const token = await getAuthToken();
     if (!token) {
       showErrorNotification(
         'The request was not sent because no auth token was retrieved.',

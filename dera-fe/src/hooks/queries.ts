@@ -1,7 +1,7 @@
 import { listProjectsInOrg } from '@/lib/dera-client/dera.client';
-import { useAuth } from '@clerk/nextjs';
 import { OrganizationResource } from '@clerk/types';
 import { useQueries } from 'react-query';
+import { useGetAuthToken } from './common';
 
 type OrgProjects = {
   orgName: string;
@@ -22,16 +22,14 @@ export function useOrgProjects({
   orgs: OrganizationResource[];
   onError?: (error: unknown) => void;
 }) {
-  const { getToken } = useAuth();
+  const { getAuthToken } = useGetAuthToken();
 
   const queries = useQueries(
     orgs.map((org) => {
       return {
         queryKey: ['orgProjects', org.id],
         queryFn: async () => {
-          const token = await getToken({
-            template: process.env.NEXT_PUBLIC_JWT_TEMPLATE_NAME || undefined,
-          });
+          const token = await getAuthToken();
 
           if (!token) {
             throw new Error(

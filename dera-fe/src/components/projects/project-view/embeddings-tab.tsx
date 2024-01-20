@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth } from '@clerk/nextjs';
+import { useGetAuthToken } from '@/hooks/common';
 import { Button, Card, Drawer, Flex, Grid, Stack, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconArrowNarrowRight } from '@tabler/icons-react';
@@ -22,16 +22,14 @@ const ProjectEmbeddingsTab = (
 ) => {
   const { project } = projectEmbeddingsTabProps;
   const [opened, { open, close }] = useDisclosure(false);
-  const { getToken } = useAuth();
+  const { getAuthToken } = useGetAuthToken();
 
   const [embeddingSchemas, setEmbeddingSchemas] = useState<
     EmbeddingSchemaResponse[]
   >([]);
 
   const getProjectEmbeddingSchemas = async () => {
-    const token = await getToken({
-      template: process.env.NEXT_PUBLIC_JWT_TEMPLATE_NAME || undefined,
-    });
+    const token = await getAuthToken();
 
     if (!token) {
       showErrorNotification(

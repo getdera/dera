@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth } from '@clerk/nextjs';
+import { useGetAuthToken } from '@/hooks/common';
 import { Button, Stack, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { useRouter } from 'next/navigation';
@@ -13,7 +13,7 @@ export type ProjectDangerTabProps = {
 };
 
 const ProjectDangerTab = ({ orgId, projectId }: ProjectDangerTabProps) => {
-  const { getToken } = useAuth();
+  const { getAuthToken } = useGetAuthToken();
   const { push } = useRouter();
 
   const openModal = () => {
@@ -32,9 +32,7 @@ const ProjectDangerTab = ({ orgId, projectId }: ProjectDangerTabProps) => {
   };
 
   const sendDeleteProjectReq = async () => {
-    const token = await getToken({
-      template: process.env.NEXT_PUBLIC_JWT_TEMPLATE_NAME || undefined,
-    });
+    const token = await getAuthToken();
     if (!token) {
       showErrorNotification(
         'The request was not sent because no auth token was retrieved.',

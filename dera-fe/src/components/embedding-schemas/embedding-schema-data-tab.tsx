@@ -1,16 +1,16 @@
 'use client';
 
-import { useAuth } from '@clerk/nextjs';
+import { useGetAuthToken } from '@/hooks/common';
+import { Group, Paper, Text } from '@mantine/core';
 import { DataTable, useDataTableColumns } from 'mantine-datatable';
-import { showErrorNotification } from '../../lib/utils';
-import { fetchEmbeddingSchemaData } from '../../lib/dera-client/dera.client';
 import { useEffect, useState } from 'react';
+import { fetchEmbeddingSchemaData } from '../../lib/dera-client/dera.client';
 import {
   EmbeddingSchemaData,
   PostgresField,
 } from '../../lib/dera-client/types/embeddings';
+import { showErrorNotification } from '../../lib/utils';
 import LoadingAnimation from '../projects/project-view/loading-animation';
-import { Paper, Group, Text } from '@mantine/core';
 
 export type EmbeddingSchemaDataTabProps = {
   orgId: string;
@@ -27,7 +27,7 @@ type EmbeddingSchemaDataTableProps = EmbeddingSchemaDataTabProps & {
 const EmbeddingSchemaDataTable = (props: EmbeddingSchemaDataTableProps) => {
   const batchSize = 50;
 
-  const { getToken } = useAuth();
+  const { getAuthToken } = useGetAuthToken();
 
   const { orgId, projectId, embeddingSchemaId, fields } = props;
 
@@ -49,9 +49,7 @@ const EmbeddingSchemaDataTable = (props: EmbeddingSchemaDataTableProps) => {
 
   const fetchData = async () => {
     setFetching(true);
-    const token = await getToken({
-      template: process.env.NEXT_PUBLIC_JWT_TEMPLATE_NAME || undefined,
-    });
+    const token = await getAuthToken();
 
     if (!token) {
       showErrorNotification(
@@ -116,14 +114,12 @@ const EmbeddingSchemaDataTable = (props: EmbeddingSchemaDataTableProps) => {
 };
 
 const EmbeddingSchemaDataTab = (props: EmbeddingSchemaDataTabProps) => {
-  const { getToken } = useAuth();
+  const { getAuthToken } = useGetAuthToken();
 
   const [fields, setFields] = useState<PostgresField[]>([]);
 
   const fetchColumns = async () => {
-    const token = await getToken({
-      template: process.env.NEXT_PUBLIC_JWT_TEMPLATE_NAME || undefined,
-    });
+    const token = await getAuthToken();
 
     if (!token) {
       showErrorNotification(
