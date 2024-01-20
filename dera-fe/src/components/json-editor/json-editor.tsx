@@ -1,5 +1,5 @@
-import { JSONEditor, JSONEditorPropsOptional } from 'vanilla-jsoneditor';
 import { useEffect, useRef } from 'react';
+import { JSONEditor, JSONEditorPropsOptional } from 'vanilla-jsoneditor';
 
 const JsonEditor = (props: JSONEditorPropsOptional) => {
   const refContainer = useRef<HTMLDivElement>(null);
@@ -26,7 +26,7 @@ const JsonEditor = (props: JSONEditorPropsOptional) => {
     }
   }, [props]);
 
-  return <div ref={refContainer}></div>;
+  return <div ref={refContainer} className="jse-theme-dark"></div>;
 };
 
 export default JsonEditor;

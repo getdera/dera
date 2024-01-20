@@ -1,12 +1,12 @@
 'use client';
 
 import { useAuth } from '@clerk/nextjs';
-import { Button, Grid, Group, Input, Paper, TextInput } from '@mantine/core';
+import { Button, Group, Paper, Stack, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { createProject } from '../../lib/dera-client/dera.client';
-import { showErrorNotification } from '../../lib/utils';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { createProject } from '../../lib/dera-client/dera.client';
+import { showErrorNotification } from '../../lib/utils';
 import { projectDetailsValidation } from './validations';
 
 export type CreateProjectFormProps = {
@@ -66,48 +66,37 @@ const CreateProjectForm = ({ org }: CreateProjectFormProps) => {
   });
 
   return (
-    <Paper withBorder className="px-6 py-6">
+    <Paper withBorder p="xl">
       <form onSubmit={form.onSubmit((values) => submitCreateProject(values))}>
-        <Grid>
-          <Grid.Col span={12} className="mb-4">
-            <b>Create a new project</b>
-          </Grid.Col>
-        </Grid>
-        <Grid>
-          <Grid.Col span={12} className="mb-4">
-            <TextInput
-              label="Organization name"
-              disabled
-              {...form.getInputProps('orgName')}
-            />
-          </Grid.Col>
-        </Grid>
-        <Input disabled type="hidden" {...form.getInputProps('orgId')} />
-        <Grid>
-          <Grid.Col span={12} className="mb-4">
-            <TextInput
-              withAsterisk
-              label="Project name"
-              placeholder="The Next Big Thing"
-              autoFocus
-              {...form.getInputProps('name')}
-            />
-          </Grid.Col>
-        </Grid>
-        <Grid>
-          <Grid.Col span={12} className="mb-4">
-            <TextInput
-              label="Project description"
-              placeholder="An optional but helpful description of your project."
-              {...form.getInputProps('description')}
-            />
-          </Grid.Col>
-        </Grid>
-        <Group justify="flex-end" mt="md">
-          <Button disabled={submitButtonDisabled} size="xs" type="submit">
-            Submit
-          </Button>
-        </Group>
+        <Stack>
+          <b>Create a new project</b>
+
+          <TextInput
+            label="Organization name"
+            disabled
+            {...form.getInputProps('orgName')}
+          />
+
+          <TextInput
+            withAsterisk
+            label="Project name"
+            placeholder="The Next Big Thing"
+            autoFocus
+            {...form.getInputProps('name')}
+          />
+
+          <TextInput
+            label="Project description"
+            placeholder="An optional but helpful description of your project."
+            {...form.getInputProps('description')}
+          />
+
+          <Group justify="end">
+            <Button disabled={submitButtonDisabled} size="xs" type="submit">
+              Submit
+            </Button>
+          </Group>
+        </Stack>
       </form>
     </Paper>
   );

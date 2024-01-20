@@ -4,12 +4,12 @@ import { useAuth } from '@clerk/nextjs';
 import { Button, Grid, Group, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useState } from 'react';
+import { createApiToken } from '../../../lib/dera-client/dera.client';
+import { CreateSdkTokenResp } from '../../../lib/dera-client/types/sdk-tokens';
 import {
   showErrorNotification,
   showSuccessNotification,
 } from '../../../lib/utils';
-import { createApiToken } from '../../../lib/dera-client/dera.client';
-import { CreateSdkTokenResp } from '../../../lib/dera-client/types/sdk-tokens';
 import LoadingAnimation from '../../projects/project-view/loading-animation';
 
 export type CreateNewTokenFormProps = {
@@ -91,8 +91,8 @@ const CreateNewTokenForm = (props: CreateNewTokenFormProps) => {
             zIndex: 999,
             width: '100%',
             height: '100%',
-            background: 'white',
             opacity: 0.8,
+            backdropFilter: 'blur(8px)',
           }}
         >
           <LoadingAnimation />

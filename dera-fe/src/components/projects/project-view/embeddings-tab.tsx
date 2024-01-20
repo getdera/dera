@@ -1,16 +1,7 @@
 'use client';
 
 import { useAuth } from '@clerk/nextjs';
-import {
-  Button,
-  Card,
-  Container,
-  Drawer,
-  Flex,
-  Grid,
-  Stack,
-  Text,
-} from '@mantine/core';
+import { Button, Card, Drawer, Flex, Grid, Stack, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconArrowNarrowRight } from '@tabler/icons-react';
 import Link from 'next/link';
@@ -111,23 +102,39 @@ const ProjectEmbeddingsTab = (
                   component={Link}
                   classNames={{
                     root: classes.embeddingSchemaButton,
+                    label: classes.label,
                   }}
                   href={`/orgs/${project.orgId}/projects/${project.id}/embedding-schemas/${embeddingSchema.id}`}
                   p="lg"
                   radius="md"
                   style={{ minHeight: '200px', overflow: 'auto' }}
                   variant="default"
+                  w="100%"
                 >
-                  <Stack gap={4} align="flex-start" justify="start" h="100%">
+                  <Stack
+                    gap={4}
+                    align="start"
+                    justify="start"
+                    h="100%"
+                    w="100%"
+                  >
                     <IconArrowNarrowRight
                       className={classes.arrow}
                       size="1rem"
                     />
-                    <Text fw={500}>{embeddingSchema.name}</Text>
+                    <Text component="div" fw={500} className="ellipsis">
+                      {embeddingSchema.name}
+                    </Text>
                     {embeddingSchema.description && (
-                      <Text c="dimmed">{embeddingSchema.description}</Text>
+                      <Text
+                        component="div"
+                        style={{ whiteSpace: 'normal' }}
+                        c="dimmed"
+                      >
+                        {embeddingSchema.description}
+                      </Text>
                     )}
-                    <Text size="sm" c="dimmed">
+                    <Text component="div" size="sm" c="dimmed">
                       Created:
                       {embeddingSchema.createdAt.toLocaleDateString()}
                     </Text>
@@ -142,10 +149,10 @@ const ProjectEmbeddingsTab = (
   }
 
   return (
-    <Container fluid className="mt-6">
+    <div>
       {createEmbeddingSchemaDrawer}
       {mainComponent}
-    </Container>
+    </div>
   );
 };
 

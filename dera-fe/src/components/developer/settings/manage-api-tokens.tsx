@@ -8,21 +8,19 @@ import {
   Card,
   Container,
   CopyButton,
-  Grid,
+  Drawer,
   Group,
   Paper,
+  Stack,
   Text,
+  TextInput,
   Tooltip,
   rem,
-  TextInput,
-  Drawer,
 } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import { modals } from '@mantine/modals';
+import { IconCheck, IconCopy } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
-import {
-  showErrorNotification,
-  showSuccessNotification,
-} from '../../../lib/utils';
 import {
   deleteApiToken,
   listApiTokensInOrg,
@@ -31,8 +29,10 @@ import {
   CreateSdkTokenResp,
   SdkTokenResp,
 } from '../../../lib/dera-client/types/sdk-tokens';
-import { IconCheck, IconCopy } from '@tabler/icons-react';
-import { useDisclosure } from '@mantine/hooks';
+import {
+  showErrorNotification,
+  showSuccessNotification,
+} from '../../../lib/utils';
 import CreateNewTokenForm from './create-new-token-form';
 
 const ManageApiTokensComponent = () => {
@@ -146,69 +146,70 @@ const ManageApiTokensComponent = () => {
     <Container>
       <Paper withBorder className="px-6 py-6">
         {isLoaded && organization ? (
-          <>
+          <Stack>
             {generateNewTokenDrawer(organization.id)}
-            <Grid>
-              <Grid.Col span={12} className="mb-4">
-                Manage API Tokens for <b>{organization.name}</b>
-              </Grid.Col>
-            </Grid>
-            <Grid>
-              <Grid.Col span={12} className="mb-4">
-                <Text size="xs">
-                  We don't store your <b>token secret</b>. If you lose it, you
-                  can generate a new token. If the token has been compromised,
-                  you can revoke it. You need both your token key and secret to
-                  use the APIs.
-                </Text>
-              </Grid.Col>
-              <Grid.Col span={12} className="mb-4">
-                <Button size="xs" onClick={open}>
-                  Generate new token
-                </Button>
-              </Grid.Col>
-              {apiTokens.map((token) => (
-                <Grid.Col span={12} className="mb-4" key={token.id}>
-                  <Card shadow="sm" padding="lg" radius="md" withBorder>
-                    <Group justify="space-between" mt="md" mb="xs">
-                      <Group>
-                        <Text fw={500}>{token.name}</Text>
-                        <Text size="xs" c="dimmed">
-                          Created {token.createdAt.toLocaleDateString()}
-                        </Text>
-                      </Group>
-                      <Button
-                        size="xs"
-                        color="red"
-                        onClick={() =>
-                          openConfirmRevokeModal(organization.id, token.id)
-                        }
-                      >
-                        Revoke
-                      </Button>
-                    </Group>
-                    <TextInput
-                      label="Token key"
-                      disabled
-                      value={token.id}
-                      rightSection={copyFunc(token.id)}
-                    />
-                    {(token as CreateSdkTokenResp).originalTokenValue ? (
-                      <TextInput
-                        label="Token secret"
-                        description="This is the only time we will show you this token secret. Make sure to copy it somewhere safe."
-                        disabled
-                        value={(token as CreateSdkTokenResp).originalTokenValue}
-                        rightSection={copyFunc(
-                          (token as CreateSdkTokenResp).originalTokenValue,
-                        )}
-                      />
-                    ) : null}
-                  </Card>
-                </Grid.Col>
-              ))}
-            </Grid>
-          </>
+            <Text>
+              Manage API Tokens for <b>{organization.name}</b>
+            </Text>
+
+            <Text size="xs">
+              We don't store your <b>token secret</b>. If you lose it, you can
+              generate a new token. If the token has been compromised, you can
+              revoke it. You need both your token key and secret to use the
+              APIs.
+            </Text>
+
+            <Group>
+              <Button size="xs" onClick={open}>
+                Generate new token
+              </Button>
+            </Group>
+
+            {apiTokens.map((token) => (
+              <Card
+                key={token.id}
+                shadow="sm"
+                padding="lg"
+                radius="md"
+                withBorder
+              >
+                <Group justify="space-between">
+                  <Group>
+                    <Text fw={500}>{token.name}</Text>
+                    <Text size="xs" c="dimmed">
+                      Created {token.createdAt.toLocaleDateString()}
+                    </Text>
+                  </Group>
+                  <Button
+                    size="xs"
+                    color="red"
+                    onClick={() =>
+                      openConfirmRevokeModal(organization.id, token.id)
+                    }
+                  >
+                    Revoke
+                  </Button>
+                </Group>
+                <TextInput
+                  label="Token key"
+                  disabled
+                  value={token.id}
+                  rightSection={copyFunc(token.id)}
+                />
+                {(token as CreateSdkTokenResp).originalTokenValue ? (
+                  <TextInput
+                    label="Token secret"
+                    description="This is the only time we will show you this token secret. Make sure to copy it somewhere safe."
+                    disabled
+                    value={(token as CreateSdkTokenResp).originalTokenValue}
+                    rightSection={copyFunc(
+                      (token as CreateSdkTokenResp).originalTokenValue,
+                    )}
+                  />
+                ) : null}
+              </Card>
+            ))}
+          </Stack>
         ) : (
           <></>
         )}

@@ -4,8 +4,7 @@ import { Montserrat } from 'next/font/google';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { cn } from '@/lib/utils';
-import { ActionIcon, Group, NavLink } from '@mantine/core';
+import { ActionIcon, Group, NavLink, Text, Title } from '@mantine/core';
 import { IconBrandGithub } from '@tabler/icons-react';
 import { GetStartedButton } from './get-started-button';
 
@@ -14,12 +13,14 @@ const font = Montserrat({ weight: '600', subsets: ['latin'] });
 export const LandingNavbar = () => {
   return (
     <Group p="md" justify="space-between">
-      <Link href="/" className="flex items-center">
+      <Text component={Link} href="/">
         <Group gap={4}>
           <Image alt="Logo" src="/icon.png" width={32} height={32} />
-          <h1 className={cn('text-2xl font-bold', font.className)}>Dera</h1>
+          <Title size={24} className={font.className}>
+            Dera
+          </Title>
         </Group>
-      </Link>
+      </Text>
       <Group gap="xs">
         <NavLink
           href="#pricing"

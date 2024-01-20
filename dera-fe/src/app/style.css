@@ -4,4 +4,5 @@
 @import '@mantine/core/styles.css';
 @import '@mantine/core/styles.layer.css';
 @import 'mantine-datatable/dist/styles.layer.css';
+@import './json-editor.css';
 @layer mantine, mantine-datatable;

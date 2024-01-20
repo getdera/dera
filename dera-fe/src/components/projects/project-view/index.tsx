@@ -1,14 +1,14 @@
 'use client';
-import { Tabs, Text } from '@mantine/core';
-import ProjectSettingsTab from './settings-tab';
-import ProjectDangerTab from './danger-tab';
 import { useAuth } from '@clerk/nextjs';
+import { Stack, Tabs, Text } from '@mantine/core';
+import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { showErrorNotification } from '../../../lib/utils';
 import { getProject } from '../../../lib/dera-client/dera.client';
 import { ProjectResponse } from '../../../lib/dera-client/types/projects';
-import { useParams } from 'next/navigation';
+import { showErrorNotification } from '../../../lib/utils';
+import ProjectDangerTab from './danger-tab';
 import ProjectEmbeddingsTab from './embeddings-tab';
+import ProjectSettingsTab from './settings-tab';
 
 const ProjectView = () => {
   const { getToken } = useAuth();
@@ -44,37 +44,36 @@ const ProjectView = () => {
   }
 
   return (
-    <>
+    <Stack gap="xl">
       <Text size="xl" fw={500}>
         {project.name}
       </Text>
-      <div className="mt-12">
-        <Tabs defaultValue="embeddings">
-          <Tabs.List>
-            <Tabs.Tab value="embeddings">Embeddings</Tabs.Tab>
-            <Tabs.Tab value="settings">Settings</Tabs.Tab>
-            <Tabs.Tab value="danger">Danger zone</Tabs.Tab>
-          </Tabs.List>
 
-          <Tabs.Panel value="embeddings">
-            <ProjectEmbeddingsTab project={project} />
-          </Tabs.Panel>
+      <Tabs defaultValue="embeddings" styles={{ panel: { paddingTop: 20 } }}>
+        <Tabs.List mb="mb">
+          <Tabs.Tab value="embeddings">Embeddings</Tabs.Tab>
+          <Tabs.Tab value="settings">Settings</Tabs.Tab>
+          <Tabs.Tab value="danger">Danger zone</Tabs.Tab>
+        </Tabs.List>
 
-          <Tabs.Panel value="settings">
-            <ProjectSettingsTab
-              project={project}
-              onProjectUpdated={(project) => {
-                setProject(project);
-              }}
-            />
-          </Tabs.Panel>
+        <Tabs.Panel value="embeddings">
+          <ProjectEmbeddingsTab project={project} />
+        </Tabs.Panel>
 
-          <Tabs.Panel value="danger">
-            <ProjectDangerTab orgId={project.orgId} projectId={project.id} />
-          </Tabs.Panel>
-        </Tabs>
-      </div>
-    </>
+        <Tabs.Panel value="settings">
+          <ProjectSettingsTab
+            project={project}
+            onProjectUpdated={(project) => {
+              setProject(project);
+            }}
+          />
+        </Tabs.Panel>
+
+        <Tabs.Panel value="danger">
+          <ProjectDangerTab orgId={project.orgId} projectId={project.id} />
+        </Tabs.Panel>
+      </Tabs>
+    </Stack>
   );
 };
 
