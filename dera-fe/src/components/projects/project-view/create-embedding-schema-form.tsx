@@ -4,10 +4,12 @@ import { useAuth } from '@clerk/nextjs';
 import {
   ActionIcon,
   Autocomplete,
+  Box,
   Button,
   Checkbox,
   Grid,
   Group,
+  Stack,
   Text,
   TextInput,
   Title,
@@ -253,189 +255,170 @@ const CreateEmbeddingSchemaForm = (
           submitEmbeddingSchemaValues(values),
         )}
       >
-        <Grid>
-          <Grid.Col span={12} className="mb-4">
-            <TextInput
-              withAsterisk
-              label="Schema name"
-              placeholder="books_embeddings_with_my_llm"
-              autoFocus
-              {...form.getInputProps('name')}
-            />
-          </Grid.Col>
-        </Grid>
-        <Grid>
-          <Grid.Col span={12} className="mb-4">
-            <TextInput
-              label="Description"
-              placeholder="An optional but helpful description of your schema."
-              {...form.getInputProps('description')}
-            />
-          </Grid.Col>
-        </Grid>
-        <Grid>
-          <Grid.Col span={12} className="mb-4">
+        <Stack gap="xs">
+          <TextInput
+            withAsterisk
+            label="Schema name"
+            placeholder="books_embeddings_with_my_llm"
+            autoFocus
+            {...form.getInputProps('name')}
+          />
+          <TextInput
+            label="Description"
+            placeholder="An optional but helpful description of your schema."
+            {...form.getInputProps('description')}
+          />
+
+          <Box my="md">
             <Title order={4}>Fields</Title>
-          </Grid.Col>
-        </Grid>
-        <Grid>
-          <Grid.Col span={12}>
             <Text>
               Every schema comes with a list of default fields. You can add more
               fields to your schema below.
             </Text>
-          </Grid.Col>
-          <Grid.Col span={12}>
-            <Title order={5}>Default fields</Title>
-          </Grid.Col>
-        </Grid>
-        <Grid gutter="xs">
-          <Grid.Col span={{ base: 12, sm: 1 }} pt="lg">
-            &nbsp;
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, sm: 3 }}>Name</Grid.Col>
-          <Grid.Col span={{ base: 12, sm: 3 }}>Type</Grid.Col>
-          <Grid.Col span={{ base: 12, sm: 5 }}>Properties</Grid.Col>
-        </Grid>
-        <Grid className="mb-8">
-          {defaultFields?.fields?.map((field) => (
-            <Grid gutter="sm" key={field.name} mb={4}>
-              <Grid.Col span={{ base: 12, sm: 1 }}>
-                <Tooltip label={field.description} multiline w={250}>
-                  <IconHelpCircleFilled
-                    style={{ width: rem(20), height: rem(20) }}
+          </Box>
+
+          <Title order={5}>Default fields</Title>
+
+          <Grid gutter="xs">
+            <Grid.Col span={{ base: 12, sm: 1 }} pt="lg">
+              &nbsp;
+            </Grid.Col>
+            <Grid.Col span={{ base: 12, sm: 3 }}>Name</Grid.Col>
+            <Grid.Col span={{ base: 12, sm: 3 }}>Type</Grid.Col>
+            <Grid.Col span={{ base: 12, sm: 5 }}>Properties</Grid.Col>
+          </Grid>
+
+          <Stack gap={8}>
+            {defaultFields?.fields?.map((field) => (
+              <Grid gutter="sm" key={field.name}>
+                <Grid.Col span={{ base: 12, sm: 1 }}>
+                  <Tooltip label={field.description} multiline w={250}>
+                    <IconHelpCircleFilled
+                      style={{ width: rem(20), height: rem(20) }}
+                    />
+                  </Tooltip>
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, sm: 3 }}>
+                  <TextInput disabled value={field.name} />
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, sm: 3 }}>
+                  <Autocomplete disabled value={field.datatype} />
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, sm: 2 }}>
+                  <Checkbox
+                    disabled
+                    checked={field.isNullable}
+                    label="Is Nullable"
                   />
-                </Tooltip>
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, sm: 3 }}>
+                  <Checkbox
+                    disabled
+                    checked={field.isPrimaryKey}
+                    label="Is Primary Key"
+                  />
+                </Grid.Col>
+              </Grid>
+            )) || <Text>An error occurred while fetching default fields.</Text>}
+          </Stack>
+
+          <Title my="md" order={5}>
+            Customization
+          </Title>
+
+          <TextInput
+            label="Embedding vector length"
+            placeholder="Length for the default embeddings field (optional). Will be set to 1536 if left empty."
+            {...form.getInputProps('embeddingVectorLength')}
+          />
+
+          <Title order={6} my="md">
+            Custom fields
+          </Title>
+
+          <Grid gutter="xs">
+            <Grid.Col span={{ base: 12, sm: 1 }}>&nbsp;</Grid.Col>
+            <Grid.Col span={{ base: 12, sm: 3 }}>Name</Grid.Col>
+            <Grid.Col span={{ base: 12, sm: 3 }}>Type</Grid.Col>
+            <Grid.Col span={{ base: 12, sm: 5 }}>Properties</Grid.Col>
+          </Grid>
+
+          {form.values.fields.map((field, index) => (
+            <Grid gutter="sm" key={index}>
+              <Grid.Col span={{ base: 12, sm: 1 }}>
+                <ActionIcon
+                  size="sm"
+                  color="red"
+                  onClick={() => removeFieldAtIndex(index)}
+                >
+                  <IconTrashFilled size="0.8rem" />
+                </ActionIcon>
               </Grid.Col>
               <Grid.Col span={{ base: 12, sm: 3 }}>
-                <TextInput disabled value={field.name} />
+                <TextInput
+                  withAsterisk
+                  placeholder="Name"
+                  {...form.getInputProps(`fields.${index}.name`)}
+                />
               </Grid.Col>
               <Grid.Col span={{ base: 12, sm: 3 }}>
-                <Autocomplete disabled value={field.datatype} />
+                <Autocomplete
+                  withAsterisk
+                  placeholder="Type or select"
+                  data={PG_DATA_TYPES.map((dt) => ({
+                    value: dt,
+                    label: dt,
+                  }))}
+                  {...form.getInputProps(`fields.${index}.datatype`)}
+                />
               </Grid.Col>
               <Grid.Col span={{ base: 12, sm: 2 }}>
                 <Checkbox
-                  disabled
-                  checked={field.isNullable}
                   label="Is Nullable"
+                  {...form.getInputProps(`fields.${index}.isNullable`, {
+                    type: 'checkbox',
+                  })}
+                />
+                <Checkbox
+                  label="Is Unique"
+                  {...form.getInputProps(`fields.${index}.isUnique`, {
+                    type: 'checkbox',
+                  })}
                 />
               </Grid.Col>
               <Grid.Col span={{ base: 12, sm: 3 }}>
+                {PG_VECTOR_TYPES.includes(field.datatype) && (
+                  <TextInput
+                    placeholder="Optional vector length"
+                    {...form.getInputProps(`fields.${index}.vectorLength`)}
+                  />
+                )}
                 <Checkbox
-                  disabled
-                  checked={field.isPrimaryKey}
-                  label="Is Primary Key"
+                  label="Has default value"
+                  {...form.getInputProps(`fields.${index}.hasDefaultValue`, {
+                    type: 'checkbox',
+                  })}
                 />
+                {field.hasDefaultValue && (
+                  <TextInput
+                    placeholder="Optional default value"
+                    {...form.getInputProps(`fields.${index}.defaultValue`)}
+                  />
+                )}
               </Grid.Col>
             </Grid>
-          )) || (
-            <Grid>
-              <Grid.Col span={12}>
-                An error occurred while fetching default fields.
-              </Grid.Col>
-            </Grid>
-          )}
-        </Grid>
-        <Grid>
-          <Grid.Col span={12}>
-            <Title order={5}>Customization</Title>
-          </Grid.Col>
-        </Grid>
-        <Grid>
-          <Grid.Col span={12} className="mb-4">
-            <TextInput
-              label="Embedding vector length"
-              placeholder="Length for the default embeddings field (optional). Will be set to 1536 if left empty."
-              {...form.getInputProps('embeddingVectorLength')}
-            />
-          </Grid.Col>
-        </Grid>
-        <Grid>
-          <Grid.Col span={12}>
-            <Title order={6}>Custom fields</Title>
-          </Grid.Col>
-        </Grid>
-        <Grid gutter="xs">
-          <Grid.Col span={{ base: 12, sm: 1 }}>&nbsp;</Grid.Col>
-          <Grid.Col span={{ base: 12, sm: 3 }}>Name</Grid.Col>
-          <Grid.Col span={{ base: 12, sm: 3 }}>Type</Grid.Col>
-          <Grid.Col span={{ base: 12, sm: 5 }}>Properties</Grid.Col>
-        </Grid>
-        {form.values.fields.map((field, index) => (
-          <Grid gutter="sm" key={index} mb={4}>
-            <Grid.Col span={{ base: 12, sm: 1 }}>
-              <ActionIcon
-                size="sm"
-                color="red"
-                onClick={() => removeFieldAtIndex(index)}
-              >
-                <IconTrashFilled style={{ width: '50%', height: '50%' }} />
-              </ActionIcon>
-            </Grid.Col>
-            <Grid.Col span={{ base: 12, sm: 3 }}>
-              <TextInput
-                withAsterisk
-                placeholder="Name"
-                {...form.getInputProps(`fields.${index}.name`)}
-              />
-            </Grid.Col>
-            <Grid.Col span={{ base: 12, sm: 3 }}>
-              <Autocomplete
-                withAsterisk
-                placeholder="Type or select"
-                data={PG_DATA_TYPES.map((dt) => ({
-                  value: dt,
-                  label: dt,
-                }))}
-                {...form.getInputProps(`fields.${index}.datatype`)}
-              />
-            </Grid.Col>
-            <Grid.Col span={{ base: 12, sm: 2 }}>
-              <Checkbox
-                label="Is Nullable"
-                {...form.getInputProps(`fields.${index}.isNullable`, {
-                  type: 'checkbox',
-                })}
-              />
-              <Checkbox
-                label="Is Unique"
-                {...form.getInputProps(`fields.${index}.isUnique`, {
-                  type: 'checkbox',
-                })}
-              />
-            </Grid.Col>
-            <Grid.Col span={{ base: 12, sm: 3 }}>
-              {PG_VECTOR_TYPES.includes(field.datatype) && (
-                <TextInput
-                  placeholder="Optional vector length"
-                  {...form.getInputProps(`fields.${index}.vectorLength`)}
-                />
-              )}
-              <Checkbox
-                label="Has default value"
-                {...form.getInputProps(`fields.${index}.hasDefaultValue`, {
-                  type: 'checkbox',
-                })}
-              />
-              {field.hasDefaultValue && (
-                <TextInput
-                  placeholder="Optional default value"
-                  {...form.getInputProps(`fields.${index}.defaultValue`)}
-                />
-              )}
-            </Grid.Col>
-          </Grid>
-        ))}
-        <Group justify="flex-start" mt="md">
-          <Button variant="outline" size="xs" onClick={addCustomField}>
-            Add field
-          </Button>
-        </Group>
-        <Group justify="flex-end" mt="md">
-          <Button disabled={submitButtonDisabled} size="xs" type="submit">
-            Save
-          </Button>
-        </Group>
+          ))}
+          <Group justify="flex-start">
+            <Button variant="outline" size="xs" onClick={addCustomField}>
+              Add field
+            </Button>
+          </Group>
+          <Group justify="flex-end">
+            <Button disabled={submitButtonDisabled} size="xs" type="submit">
+              Save
+            </Button>
+          </Group>
+        </Stack>
       </form>
     </div>
   );
