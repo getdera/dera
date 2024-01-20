@@ -1,31 +1,23 @@
 'use client';
 
-import {
-  ActionIcon,
-  Grid,
-  Group,
-  Modal,
-  Text,
-  Title,
-  Tooltip,
-} from '@mantine/core';
-import {
-  MatchQueryResp,
-  MatchQueryResultResp,
-} from '../../lib/dera-client/types/embedding-match-queries-results';
-import JsonEditor from '../json-editor/json-editor';
 import { useAuth } from '@clerk/nextjs';
-import { showErrorNotification } from '../../lib/utils';
-import { listMatchResultsForQuery } from '../../lib/dera-client/dera.client';
-import { useEffect, useState } from 'react';
+import { ActionIcon, Grid, Group, Text, Title, Tooltip } from '@mantine/core';
+import { modals } from '@mantine/modals';
+import { IconChevronRight, IconEye } from '@tabler/icons-react';
 import {
   DataTable,
   DataTableRowClickHandler,
   useDataTableColumns,
 } from 'mantine-datatable';
+import { useEffect, useState } from 'react';
+import { listMatchResultsForQuery } from '../../lib/dera-client/dera.client';
+import {
+  MatchQueryResp,
+  MatchQueryResultResp,
+} from '../../lib/dera-client/types/embedding-match-queries-results';
+import { showErrorNotification } from '../../lib/utils';
+import JsonEditor from '../json-editor/json-editor';
 import LoadingAnimation from '../projects/project-view/loading-animation';
-import { IconChevronRight, IconEye } from '@tabler/icons-react';
-import { useDisclosure } from '@mantine/hooks';
 
 export type MatchQueryWithResultsDetailsComponentProps = {
   matchQuery: MatchQueryResp;
@@ -36,13 +28,6 @@ const MatchedRowsDataTable = ({
 }: {
   matchResult: MatchQueryResultResp;
 }) => {
-  const [rowInView, setRowInView] = useState<{ [field: string]: any } | null>(
-    null,
-  );
-
-  const [modalOpened, { open: openModal, close: closeModal }] =
-    useDisclosure(false);
-
   const storeColumnsKey = `col-key-result-${matchResult.id}-rows`;
   const { effectiveColumns } = useDataTableColumns<{ [field: string]: any }>({
     key: storeColumnsKey,
@@ -55,7 +40,7 @@ const MatchedRowsDataTable = ({
         width: 50,
         render: (record) => (
           <Tooltip label="View results">
-            <ActionIcon size="xs">
+            <ActionIcon size="sm" variant="default">
               <IconEye />
             </ActionIcon>
           </Tooltip>
@@ -84,32 +69,24 @@ const MatchedRowsDataTable = ({
   const onMatchResultRowClick: DataTableRowClickHandler<{
     [field: string]: any;
   }> = (row) => {
-    setRowInView(row.record);
-    openModal();
-  };
-
-  const onModalClose = () => {
-    setRowInView(null);
-    closeModal();
+    modals.open({
+      size: '75%',
+      children: <JsonEditor readOnly={true} content={{ json: row.record }} />,
+    });
   };
 
   return (
-    <>
-      <Modal opened={modalOpened} onClose={onModalClose} size="75%">
-        <JsonEditor readOnly={true} content={{ json: rowInView }} />
-      </Modal>
-      <DataTable
-        borderRadius="sm"
-        striped
-        highlightOnHover
-        withTableBorder
-        withColumnBorders
-        storeColumnsKey={storeColumnsKey}
-        columns={effectiveColumns}
-        records={matchResult.resultBody.rows}
-        onRowClick={onMatchResultRowClick}
-      />
-    </>
+    <DataTable
+      borderRadius="sm"
+      striped
+      highlightOnHover
+      withTableBorder
+      withColumnBorders
+      storeColumnsKey={storeColumnsKey}
+      columns={effectiveColumns}
+      records={matchResult.resultBody.rows}
+      onRowClick={onMatchResultRowClick}
+    />
   );
 };
 
