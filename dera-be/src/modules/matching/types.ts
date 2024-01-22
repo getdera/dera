@@ -11,6 +11,17 @@ export enum MatchOperator {
   COSINE_DISTANCE = 'COSINE_DISTANCE',
 }
 
+/**
+ * Multiple columns will be joined with AND
+ */
+type MetadataFilters = {
+  filters: {
+    column: string;
+    operator: string;
+    value: number | string;
+  }[];
+};
+
 // FEAT: metadata filters
 export type EmbeddingMatchReqDto = {
   content: string;
@@ -28,11 +39,15 @@ export type EmbeddingMatchReqDto = {
     filter: '>' | '<' | '=' | '>=' | '<=';
     score: number;
   };
+  /**
+   * An array of metadata filters which will be joined with OR
+   */
+  metadataFilters?: MetadataFilters[];
 };
 
 export type EffectiveMatchRequest = Omit<
   EmbeddingMatchReqDto,
-  'select' | 'matchOperator' | 'order' | 'matchScoreFilter'
+  'select' | 'matchOperator' | 'order' | 'matchScoreFilter' | 'metadataFilters'
 > & {
   select: {
     additionalColumns: string[];
@@ -46,6 +61,7 @@ export type EffectiveMatchRequest = Omit<
     filter: '>' | '<' | '=' | '>=' | '<=';
     score: number;
   } | null;
+  metadataFilters: MetadataFilters[];
 };
 
 export type MatchResults = {

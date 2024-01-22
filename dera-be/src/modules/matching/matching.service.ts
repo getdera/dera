@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import {
   EffectiveMatchRequest,
   EmbeddingMatchReqDto,
@@ -16,6 +16,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MatchQueryEntity } from './match-query.entity';
 import { Repository } from 'typeorm';
 import { MatchQueryResultEntity } from './match-query-result.entity';
+import { QueryResult } from 'pg';
 
 const MATCHED_SCORE_COL_NAME = 'matched_score';
 
@@ -27,6 +28,7 @@ export class MatchingService {
     private readonly matchQueryRepo: Repository<MatchQueryEntity>,
   ) {}
 
+  // FEAT: check column names in filters with schema to make sure they exist
   async match(
     orgId: string,
     fromApi: boolean,
@@ -46,17 +48,25 @@ export class MatchingService {
       effectiveRequest,
     );
 
-    const results = await runSqlDdlGetResults(
-      {
-        host: neonDetailsWithPassword.neonEndpointHost,
-        port: 5432,
-        user: neonDetailsWithPassword.neonRoleName,
-        password: neonDetailsWithPassword.neonRolePassword,
-        database: neonDetailsWithPassword.neonDatabaseName,
-        ssl: true,
-      },
-      query,
-    );
+    let results: {
+      res: QueryResult<any>;
+      timeTakenMs: number;
+    } | null = null;
+    try {
+      results = await runSqlDdlGetResults(
+        {
+          host: neonDetailsWithPassword.neonEndpointHost,
+          port: 5432,
+          user: neonDetailsWithPassword.neonRoleName,
+          password: neonDetailsWithPassword.neonRolePassword,
+          database: neonDetailsWithPassword.neonDatabaseName,
+          ssl: true,
+        },
+        query,
+      );
+    } catch (err) {
+      throw new BadRequestException(err.message);
+    }
 
     const { res, timeTakenMs } = results;
 
@@ -98,6 +108,7 @@ export class MatchingService {
         order: matchReqDto.order?.order || Order.DESC,
       },
       matchScoreFilter: matchReqDto.matchScoreFilter || null,
+      metadataFilters: matchReqDto.metadataFilters || [],
     };
   }
 
@@ -131,13 +142,28 @@ export class MatchingService {
 
     const parameterizedValues: any[] = [];
 
-    let filter = '';
+    let matchScoreFilter = '';
     if (effectiveRequest.matchScoreFilter) {
-      filter = `${matchQuery} ${
+      matchScoreFilter = `${matchQuery} ${
         effectiveRequest.matchScoreFilter.filter
       } $${parameterIndex++}`;
       parameterizedValues.push(effectiveRequest.matchScoreFilter.score);
     }
+
+    const metadataFilters = effectiveRequest.metadataFilters
+      .map((metadataFilter) => {
+        return metadataFilter.filters
+          .map((filter) => {
+            parameterizedValues.push(filter.value);
+            return `${filter.column} ${filter.operator} $${parameterIndex++}`;
+          })
+          .join(' AND ');
+      })
+      .join(' OR ');
+
+    const filter = `${matchScoreFilter || ''} ${
+      matchScoreFilter && metadataFilters ? 'AND' : ''
+    } ${metadataFilters || ''}`;
 
     const orderBy = `${effectiveRequest.order.column} ${effectiveRequest.order.order}`;
 

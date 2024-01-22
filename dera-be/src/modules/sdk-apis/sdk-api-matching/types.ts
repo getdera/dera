@@ -4,6 +4,7 @@ import {
   IsEnum,
   IsIn,
   IsInt,
+  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
@@ -46,6 +47,28 @@ class MatchScoreFilter {
   score: number;
 }
 
+class ColumnFilter {
+  @IsString()
+  @IsNotEmpty()
+  column: string;
+
+  @IsString()
+  @IsNotEmpty()
+  operator: string;
+
+  @IsNotEmpty()
+  value: number | string;
+}
+class MetadataFilters {
+  /**
+   * These filters will be joined with AND.
+   */
+  @IsArray()
+  @ValidateNested()
+  @Type(() => ColumnFilter)
+  filters: ColumnFilter[];
+}
+
 export class EmbeddingMatchReq {
   @IsString()
   content: string;
@@ -76,6 +99,15 @@ export class EmbeddingMatchReq {
   @Type(() => MatchScoreFilter)
   @ValidateNested()
   matchScoreFilter?: MatchScoreFilter;
+
+  /**
+   * An array of metadata filters which will be joined with OR
+   */
+  @IsOptional()
+  @IsArray()
+  @Type(() => MetadataFilters)
+  @ValidateNested()
+  metadataFilters: MetadataFilters[];
 }
 
 export type EmbeddingMatchResp = {
