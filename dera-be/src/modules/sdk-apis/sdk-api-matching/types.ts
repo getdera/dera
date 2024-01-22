@@ -107,7 +107,7 @@ export class EmbeddingMatchReq {
   @IsArray()
   @Type(() => MetadataFilters)
   @ValidateNested()
-  metadataFilters: MetadataFilters[];
+  metadataFilters?: MetadataFilters[];
 }
 
 export type EmbeddingMatchResp = {

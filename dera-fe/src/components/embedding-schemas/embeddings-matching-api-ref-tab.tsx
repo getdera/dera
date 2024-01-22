@@ -70,6 +70,19 @@ const EmbeddingsMatchingApiRefTab = (
     filter: '>' | '<' | '=' | '>=' | '<=';
     score: number;
   };
+
+  /**
+   * (Optional) Filter by metadata. This will add additional WHERE clauses to the query.
+   * The array of metadata filters will be joined by OR. Within each metadata filter, the array
+   * of filters will be joined by AND.
+   */
+  metadataFilters?: {
+    filters: {
+      column: string;
+      operator: string;
+      value: number | string;
+    }[];
+  }[]
 }`;
   const responseBodyJson = `{
   /**
