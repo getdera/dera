@@ -4,7 +4,6 @@ import {
   Anchor,
   AspectRatio,
   Card,
-  Container,
   Group,
   List,
   SimpleGrid,
@@ -24,7 +23,7 @@ import classes from './page.module.css';
 
 const LandingPage = () => {
   return (
-    <Container size="lg">
+    <>
       <Stack gap={60}>
         <LandingHero />
 
@@ -42,7 +41,7 @@ const LandingPage = () => {
 
         <Questions />
       </Stack>
-    </Container>
+    </>
   );
 };
 

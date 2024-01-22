@@ -1,9 +1,17 @@
 import { contact, domain, productName } from '@/lib/constants';
-import { Container } from '@mantine/core';
+import { Container, Group } from '@mantine/core';
+import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Terms() {
   return (
     <Container>
+      <Group justify="start" py="xs">
+        <Link href="/">
+          <Image alt="Logo" src="/icon.png" width={32} height={32} />
+        </Link>
+      </Group>
+
       <h2>Terms of Service</h2>
 
       <p>Last modified: Jan 20, 2024</p>
