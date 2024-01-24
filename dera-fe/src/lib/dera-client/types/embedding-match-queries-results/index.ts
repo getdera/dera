@@ -29,6 +29,17 @@ export class EffectiveMatchRequest {
   } | null;
 }
 
+export class SearchMatchQueriesFilterReq {
+  content: string;
+  projectId: string;
+  page: number = 0;
+}
+
+export class EmbeddingSchemaShortResp {
+  embeddingSchemaId: string;
+  name: string;
+}
+
 export class MatchQueryResp {
   id: string;
 
@@ -39,6 +50,10 @@ export class MatchQueryResp {
   embeddingSchemaId: string;
   fromApi: boolean;
   matchQueryBody: EffectiveMatchRequest;
+
+  content: string;
+
+  embeddingSchema: EmbeddingSchemaShortResp;
 }
 
 export class ListMatchQueriesResp {
