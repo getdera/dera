@@ -46,6 +46,7 @@ const EmbeddingSchemaDataTable = (props: EmbeddingSchemaDataTableProps) => {
 
   const [fetching, setFetching] = useState<boolean>(true);
   const [rows, setRows] = useState<EmbeddingSchemaData[]>([]);
+  const [hasMoreRows, setHasMoreRows] = useState<boolean>(true);
 
   const fetchData = async () => {
     setFetching(true);
@@ -70,6 +71,7 @@ const EmbeddingSchemaDataTable = (props: EmbeddingSchemaDataTableProps) => {
           limit: batchSize,
         },
       );
+      setHasMoreRows(!!dataResp.rows.length);
       setRows([...rows, ...dataResp.rows]);
     } catch (err) {
       showErrorNotification((err as any)?.message || 'An error occurred.');
@@ -82,7 +84,9 @@ const EmbeddingSchemaDataTable = (props: EmbeddingSchemaDataTableProps) => {
   }, []);
 
   const loadMoreRows = async () => {
-    await fetchData();
+    if (hasMoreRows) {
+      await fetchData();
+    }
   };
 
   // FEAT: UX can be improved
