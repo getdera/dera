@@ -1,13 +1,10 @@
 'use client';
 
-import { useGetAuthToken } from '@/hooks/common';
+import { useEmbeddingSchemasList } from '@/hooks/queries';
 import { Button, Card, Drawer, Flex, Grid, Stack, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconArrowNarrowRight } from '@tabler/icons-react';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { listEmbeddingSchemasInProject } from '../../../lib/dera-client/dera.client';
-import { EmbeddingSchemaResponse } from '../../../lib/dera-client/types/embedding-schema';
 import { ProjectResponse } from '../../../lib/dera-client/types/projects';
 import { showErrorNotification } from '../../../lib/utils';
 import CreateEmbeddingSchemaForm from './create-embedding-schema-form';
@@ -22,37 +19,12 @@ const ProjectEmbeddingsTab = (
 ) => {
   const { project } = projectEmbeddingsTabProps;
   const [opened, { open, close }] = useDisclosure(false);
-  const { getAuthToken } = useGetAuthToken();
-
-  const [embeddingSchemas, setEmbeddingSchemas] = useState<
-    EmbeddingSchemaResponse[]
-  >([]);
-
-  const getProjectEmbeddingSchemas = async () => {
-    const token = await getAuthToken();
-
-    if (!token) {
-      showErrorNotification(
-        'The request was not sent because no auth token was retrieved.',
-      );
-      return;
-    }
-
-    try {
-      const listEmbeddingSchemasResponse = await listEmbeddingSchemasInProject(
-        token,
-        project.orgId,
-        project.id,
-      );
-      setEmbeddingSchemas(listEmbeddingSchemasResponse.embeddingSchemas);
-    } catch (err) {
+  const { embeddingSchemasList } = useEmbeddingSchemasList({
+    project,
+    onError: (err) => {
       showErrorNotification((err as any)?.message || 'An error occurred.');
-    }
-  };
-
-  useEffect(() => {
-    getProjectEmbeddingSchemas().then();
-  }, []);
+    },
+  });
 
   const createEmbeddingSchemaDrawer = (
     <Drawer
@@ -72,7 +44,7 @@ const ProjectEmbeddingsTab = (
 
   let mainComponent = <></>;
 
-  if (!embeddingSchemas.length) {
+  if (!embeddingSchemasList.length) {
     mainComponent = (
       <Flex justify="center">
         <Card shadow="sm" padding="lg" radius="md" withBorder>
@@ -93,7 +65,7 @@ const ProjectEmbeddingsTab = (
           New embedding schema
         </Button>
         <Grid className="mt-4">
-          {embeddingSchemas.map((embeddingSchema) => {
+          {embeddingSchemasList.map((embeddingSchema) => {
             return (
               <Grid.Col span={{ base: 12, md: 4 }} key={embeddingSchema.id}>
                 <Button

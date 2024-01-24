@@ -9,7 +9,7 @@
   --jse-text-color-inverse: #4d4d4d;
 
   /* main, menu, modal */
-  --jse-main-border: 1px solid #4f4f4f;
+  --jse-main-border: 0px solid #4f4f4f;
   --jse-menu-color: #fff;
   --jse-modal-background: #2f2f2f;
   --jse-modal-overlay-background: rgba(0, 0, 0, 0.5);

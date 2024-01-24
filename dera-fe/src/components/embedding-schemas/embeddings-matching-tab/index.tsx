@@ -3,17 +3,19 @@
 import { useGetAuthToken } from '@/hooks/common';
 import { ActionIcon, Group, Paper, Text, Tooltip } from '@mantine/core';
 import { modals } from '@mantine/modals';
-import { IconEye } from '@tabler/icons-react';
+import { IconEye, IconGitCompare } from '@tabler/icons-react';
 import {
   DataTable,
   DataTableRowClickHandler,
   useDataTableColumns,
 } from 'mantine-datatable';
 import { useEffect, useState } from 'react';
-import { listMatchQueriesInSchema } from '../../lib/dera-client/dera.client';
-import { MatchQueryResp } from '../../lib/dera-client/types/embedding-match-queries-results';
-import { showErrorNotification } from '../../lib/utils';
-import LoadingAnimation from '../projects/project-view/loading-animation';
+import { listMatchQueriesInSchema } from '../../../lib/dera-client/dera.client';
+import { MatchQueryResp } from '../../../lib/dera-client/types/embedding-match-queries-results';
+import { showErrorNotification } from '../../../lib/utils';
+import LoadingAnimation from '../../projects/project-view/loading-animation';
+import EmbeddingQueryResultsCompareModal from './embedding-query-results-compare-modal';
+import classes from './embeddings-matching-tab.module.css';
 import MatchQueryWithResultsDetailsComponent from './match-query-with-results-component';
 
 export type EmbeddingsMatchingTabProps = {
@@ -25,7 +27,7 @@ export type EmbeddingsMatchingTabProps = {
 const EmbeddingsMatchingTab = (props: EmbeddingsMatchingTabProps) => {
   const { getAuthToken } = useGetAuthToken();
 
-  const { orgId, embeddingSchemaId } = props;
+  const { orgId, projectId, embeddingSchemaId } = props;
 
   const [fetching, setFetching] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<number>(-1);
@@ -57,6 +59,36 @@ const EmbeddingsMatchingTab = (props: EmbeddingsMatchingTabProps) => {
         ellipsis: true,
       },
       {
+        accessor: 'matchQueryBody.content',
+        title: 'Query',
+        resizable: true,
+        width: '60%',
+        ellipsis: true,
+        render: (record) => (
+          <Group wrap="nowrap">
+            <Text
+              component="div"
+              classNames={{ root: `${classes.queryText} ellipsis` }}
+            >
+              {record.matchQueryBody.content}
+            </Text>
+            <Tooltip label="Compare query results with other embeddings">
+              <ActionIcon size="sm" variant="default">
+                <IconGitCompare
+                  onClick={(ev) => {
+                    ev.stopPropagation();
+                    EmbeddingQueryResultsCompareModal.open({
+                      projectId,
+                      matchQuery: record,
+                    });
+                  }}
+                />
+              </ActionIcon>
+            </Tooltip>
+          </Group>
+        ),
+      },
+      {
         accessor: 'createdAt',
         resizable: true,
         ellipsis: true,
@@ -66,13 +98,6 @@ const EmbeddingsMatchingTab = (props: EmbeddingsMatchingTabProps) => {
         accessor: 'fromApi',
         resizable: true,
         render: (record) => record.fromApi.toString(),
-      },
-      {
-        accessor: 'matchQueryBody.content',
-        title: 'Query',
-        resizable: true,
-        width: '60%',
-        ellipsis: true,
       },
     ],
   });

@@ -1,3 +1,4 @@
+import { Card } from '@mantine/core';
 import { useEffect, useRef } from 'react';
 import { JSONEditor, JSONEditorPropsOptional } from 'vanilla-jsoneditor';
 
@@ -26,7 +27,9 @@ const JsonEditor = (props: JSONEditorPropsOptional) => {
     }
   }, [props]);
 
-  return <div ref={refContainer} className="jse-theme-dark"></div>;
+  return (
+    <Card p={0} withBorder ref={refContainer} className="jse-theme-dark"></Card>
+  );
 };
 
 export default JsonEditor;

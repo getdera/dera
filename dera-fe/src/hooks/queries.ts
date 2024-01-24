@@ -1,6 +1,9 @@
-import { listProjectsInOrg } from '@/lib/dera-client/dera.client';
+import {
+  listEmbeddingSchemasInProject,
+  listProjectsInOrg,
+} from '@/lib/dera-client/dera.client';
 import { OrganizationResource } from '@clerk/types';
-import { useQueries } from 'react-query';
+import { useQueries, useQuery } from 'react-query';
 import { useGetAuthToken } from './common';
 
 type OrgProjects = {
@@ -31,11 +34,7 @@ export function useOrgProjects({
         queryFn: async () => {
           const token = await getAuthToken();
 
-          if (!token) {
-            throw new Error(
-              'The request was not sent because no auth token was retrieved.',
-            );
-          }
+          validateToken(token);
 
           const { id: orgId, name: orgName } = org;
 
@@ -72,4 +71,39 @@ export function useOrgProjects({
     orgProjects,
     orgProjectsIsLoading,
   };
+}
+
+export function useEmbeddingSchemasList({
+  project,
+  onError,
+}: {
+  project: { id: string; orgId: string };
+  onError: (error: unknown) => void;
+}) {
+  const { getAuthToken } = useGetAuthToken();
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['embedding-schemas-list', project],
+    queryFn: async () => {
+      const token = await getAuthToken();
+
+      validateToken(token);
+
+      return listEmbeddingSchemasInProject(token, project.orgId, project.id);
+    },
+    onError,
+  });
+
+  return {
+    embeddingSchemasList: data?.embeddingSchemas || [],
+    isLoadingEmbeddingSchemasList: isLoading,
+  };
+}
+
+function validateToken(token: string | null): asserts token is string {
+  if (!token) {
+    throw new Error(
+      'The request was not sent because no auth token was retrieved.',
+    );
+  }
 }

@@ -10,14 +10,14 @@ import {
   useDataTableColumns,
 } from 'mantine-datatable';
 import { useEffect, useState } from 'react';
-import { listMatchResultsForQuery } from '../../lib/dera-client/dera.client';
+import { listMatchResultsForQuery } from '../../../lib/dera-client/dera.client';
 import {
   MatchQueryResp,
   MatchQueryResultResp,
-} from '../../lib/dera-client/types/embedding-match-queries-results';
-import { showErrorNotification } from '../../lib/utils';
-import JsonEditor from '../json-editor/json-editor';
-import LoadingAnimation from '../projects/project-view/loading-animation';
+} from '../../../lib/dera-client/types/embedding-match-queries-results';
+import { showErrorNotification } from '../../../lib/utils';
+import JsonEditor from '../../json-editor/json-editor';
+import LoadingAnimation from '../../projects/project-view/loading-animation';
 
 export type MatchQueryWithResultsDetailsComponentProps = {
   matchQuery: MatchQueryResp;

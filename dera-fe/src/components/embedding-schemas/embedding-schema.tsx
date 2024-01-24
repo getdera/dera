@@ -65,7 +65,7 @@ const EmbeddingSchemaComponent = () => {
         <Tabs.List>
           <Tabs.Tab value="data">Data</Tabs.Tab>
           <Tabs.Tab value="upload">Upload</Tabs.Tab>
-          <Tabs.Tab value="embeddings-matching">Embeddings matching</Tabs.Tab>
+          <Tabs.Tab value="embeddings-matching">Query matches</Tabs.Tab>
           <Tabs.Tab value="embeddings-matching-api-ref">
             Matching API docs
           </Tabs.Tab>
@@ -82,6 +82,7 @@ const EmbeddingSchemaComponent = () => {
         <Tabs.Panel value="upload">
           <EmbeddingSchemaUploadTab embeddingSchemaId={embeddingSchema.id} />
         </Tabs.Panel>
+
         <Tabs.Panel value="embeddings-matching">
           <EmbeddingsMatchingTab
             orgId={params.orgId}
@@ -89,6 +90,7 @@ const EmbeddingSchemaComponent = () => {
             embeddingSchemaId={embeddingSchema.id}
           />
         </Tabs.Panel>
+
         <Tabs.Panel value="embeddings-matching-api-ref">
           <EmbeddingsMatchingApiRefTab embeddingSchemaId={embeddingSchema.id} />
         </Tabs.Panel>
