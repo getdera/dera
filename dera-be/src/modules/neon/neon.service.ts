@@ -94,6 +94,10 @@ export class NeonService {
           endpoints: [
             {
               type: 'read_write',
+              // FEAT: make this configurable
+              autoscaling_limit_min_cu: 0.5,
+              autoscaling_limit_max_cu: 0.5,
+              suspend_timeout_seconds: 120,
             },
           ],
           branch: {

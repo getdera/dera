@@ -1,4 +1,4 @@
-import { Pool, PoolConfig, QueryResult } from 'pg';
+import { Client, ClientConfig, QueryResult } from 'pg';
 
 export type ParameterizedQuery = {
   text: string;
@@ -6,49 +6,51 @@ export type ParameterizedQuery = {
 };
 
 export async function runSqlDdlsInTransaction(
-  config: PoolConfig,
+  config: ClientConfig,
   sqlDdls: (string | ParameterizedQuery)[],
 ) {
   if (!sqlDdls.length) {
     return;
   }
 
-  const pool = new Pool(config);
+  const client = new Client(config);
   try {
-    await pool.query('BEGIN');
+    await client.connect();
+    await client.query('BEGIN');
     for (const sqlDdl of sqlDdls) {
       if (typeof sqlDdl === 'string') {
-        await pool.query(sqlDdl);
+        await client.query(sqlDdl);
       } else {
-        await pool.query(sqlDdl.text, sqlDdl.values);
+        await client.query(sqlDdl.text, sqlDdl.values);
       }
     }
-    await pool.query('COMMIT');
+    await client.query('COMMIT');
   } finally {
-    await pool.end();
+    await client.end();
   }
 }
 
 export async function runSqlDdlGetResults(
-  config: PoolConfig,
+  config: ClientConfig,
   sqlDdl: string | ParameterizedQuery,
 ): Promise<{
   res: QueryResult<any>;
   timeTakenMs: number;
 }> {
-  const pool = new Pool(config);
+  const client = new Client(config);
 
   try {
+    await client.connect();
     const now = new Date();
     const result =
       typeof sqlDdl === 'string'
-        ? await pool.query(sqlDdl)
-        : await pool.query(sqlDdl.text, sqlDdl.values);
+        ? await client.query(sqlDdl)
+        : await client.query(sqlDdl.text, sqlDdl.values);
     return {
       res: result,
       timeTakenMs: new Date().getTime() - now.getTime(),
     };
   } finally {
-    await pool.end();
+    await client.end();
   }
 }
