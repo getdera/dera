@@ -1,4 +1,5 @@
 import { Type } from 'class-transformer';
+import { IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export enum Order {
   ASC = 'ASC',
@@ -22,7 +23,6 @@ type MetadataFilters = {
   }[];
 };
 
-// FEAT: metadata filters
 export type EmbeddingMatchReqDto = {
   content: string;
   embeddings: number[];
@@ -78,6 +78,36 @@ export type EmbeddingMatchResultDto = {
   matchTimeTakenMs: number;
 };
 
+export type FindMatchQueriesFilter = {
+  embeddingSchemaId?: string;
+  content?: string;
+  projectId?: string;
+};
+
+export class SearchMatchQueriesFilterReq {
+  @IsOptional()
+  @IsUUID()
+  embeddingSchemaId?: string;
+
+  @IsOptional()
+  @IsString()
+  content?: string;
+
+  @IsOptional()
+  @IsUUID()
+  projectId?: string;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  page: number = 0;
+}
+
+export class EmbeddingSchemaShortResp {
+  embeddingSchemaId: string;
+  name: string;
+}
+
 export class MatchQueryResp {
   id: string;
 
@@ -88,6 +118,10 @@ export class MatchQueryResp {
   embeddingSchemaId: string;
   fromApi: boolean;
   matchQueryBody: EffectiveMatchRequest;
+
+  content: string;
+
+  embeddingSchema: EmbeddingSchemaShortResp;
 }
 
 export class ListMatchQueriesResp {

@@ -1,8 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MatchQueryEntity } from './match-query.entity';
+import {
+  MatchQueryEntity,
+  MatchQueryEntityWithSchemaJoined,
+} from './match-query.entity';
 import { Repository } from 'typeorm';
 import { MatchQueryResultEntity } from './match-query-result.entity';
+import { FindMatchQueriesFilter } from './types';
 
 @Injectable()
 export class MatchQueriesService {
@@ -13,27 +17,38 @@ export class MatchQueriesService {
     private readonly matchQueryResultsRepo: Repository<MatchQueryResultEntity>,
   ) {}
 
-  async getMatchQueriesinEmbeddingSchema(
+  async findMatchQueries(
     orgId: string,
-    embeddingSchemaId: string,
+    filter: FindMatchQueriesFilter,
     page: number = 0,
   ): Promise<{
-    queries: MatchQueryEntity[];
+    queries: MatchQueryEntityWithSchemaJoined[];
     page: number;
     hasNextPage: boolean;
   }> {
     const batchSize = 20;
-    const entities = await this.matchQueriesRepo.find({
-      where: {
-        embeddingSchemaId,
-        orgId,
-      },
-      order: {
-        createdAt: 'DESC',
-      },
-      skip: batchSize * page,
-      take: batchSize + 1,
-    });
+    const entities = (
+      await this.matchQueriesRepo.find({
+        where: {
+          orgId,
+          embeddingSchemaId: filter.embeddingSchemaId,
+          content: filter.content,
+          embeddingSchema: filter.projectId
+            ? {
+                projectId: filter.projectId,
+              }
+            : undefined,
+        },
+        relations: {
+          embeddingSchema: true,
+        },
+        order: {
+          createdAt: 'DESC',
+        },
+        skip: batchSize * page,
+        take: batchSize + 1,
+      })
+    ).map((ent) => ent as MatchQueryEntityWithSchemaJoined); // because we joined the relation above
 
     const hasNextPage = entities.length > batchSize;
 

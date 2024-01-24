@@ -9,7 +9,12 @@ import {
 } from '@nestjs/common';
 import { MatchQueriesService } from './match-queries.service';
 import { OrgMembershipGuard } from '../auth/org-membership.guard';
-import { ListMatchQueriesResp, ListMatchQueryResultResp } from './types';
+import {
+  ListMatchQueriesResp,
+  ListMatchQueryResultResp,
+  SearchMatchQueriesFilterReq,
+} from './types';
+import { matchQueryEntityToResp } from './helpers';
 
 @UseGuards(OrgMembershipGuard)
 @Controller('orgs/:orgId')
@@ -22,21 +27,36 @@ export class MatchQueriesAndResultsController {
     @Param('embeddingSchemaId', ParseUUIDPipe) embeddingSchemaId: string,
     @Query('page', ParseIntPipe) page: number = 0,
   ): Promise<ListMatchQueriesResp> {
-    const entities =
-      await this.matchQueriesService.getMatchQueriesinEmbeddingSchema(
-        orgId,
+    const entities = await this.matchQueriesService.findMatchQueries(
+      orgId,
+      {
         embeddingSchemaId,
-        page,
-      );
+      },
+      page,
+    );
     return {
-      queries: entities.queries.map((entity) => ({
-        id: entity.id,
-        createdAt: entity.createdAt,
-        orgId: entity.orgId,
-        embeddingSchemaId: entity.embeddingSchemaId,
-        fromApi: entity.fromApi,
-        matchQueryBody: entity.matchQueryBody,
-      })),
+      queries: entities.queries.map(matchQueryEntityToResp),
+      page: entities.page,
+      hasNextPage: entities.hasNextPage,
+    };
+  }
+
+  @Get('search-match-queries')
+  async searchMatchQueries(
+    @Param('orgId') orgId: string,
+    @Query() searchFilters: SearchMatchQueriesFilterReq,
+  ): Promise<ListMatchQueriesResp> {
+    const entities = await this.matchQueriesService.findMatchQueries(
+      orgId,
+      {
+        embeddingSchemaId: searchFilters.embeddingSchemaId,
+        content: searchFilters.content,
+        projectId: searchFilters.projectId,
+      },
+      searchFilters.page,
+    );
+    return {
+      queries: entities.queries.map(matchQueryEntityToResp),
       page: entities.page,
       hasNextPage: entities.hasNextPage,
     };

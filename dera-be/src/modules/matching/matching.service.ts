@@ -81,6 +81,7 @@ export class MatchingService {
     matchQueryEntity.embeddingSchemaId = embeddingSchemaId;
     matchQueryEntity.fromApi = fromApi;
     matchQueryEntity.matchQueryBody = effectiveRequest;
+    matchQueryEntity.content = effectiveRequest.content;
     const matchQueryResultEntity = new MatchQueryResultEntity();
     matchQueryResultEntity.resultBody = matchResults;
     matchQueryResultEntity.matchTimeTakenMs = timeTakenMs;

@@ -31,6 +31,7 @@ import {
 import {
   ListMatchQueriesResp,
   ListMatchQueryResultResp,
+  SearchMatchQueriesFilterReq,
 } from './types/embedding-match-queries-results';
 
 export class DeleteSuccessResponse {
@@ -213,6 +214,22 @@ export async function listMatchQueriesInSchema(
 ): Promise<ListMatchQueriesResp> {
   return await makeGetRequest<ListMatchQueriesResp>({
     endpoint: `/api/v1/orgs/${orgId}/embedding-schemas/${embeddingSchemaId}/match-queries?page=${page}`,
+    authToken,
+    respClass: ListMatchQueriesResp,
+  });
+}
+
+export async function searchMatchQueries(
+  authToken: string,
+  orgId: string,
+  searchFilters: SearchMatchQueriesFilterReq,
+): Promise<ListMatchQueriesResp> {
+  const params = new URLSearchParams(searchFilters as any).toString();
+
+  return await makeGetRequest<ListMatchQueriesResp>({
+    endpoint: `/api/v1/orgs/${orgId}/search-match-queries${
+      params ? `?${params}` : ''
+    }`,
     authToken,
     respClass: ListMatchQueriesResp,
   });
