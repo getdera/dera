@@ -95,8 +95,8 @@ export class NeonService {
             {
               type: 'read_write',
               // FEAT: make this configurable
-              autoscaling_limit_min_cu: 0.5,
-              autoscaling_limit_max_cu: 0.5,
+              autoscaling_limit_min_cu: 0.25,
+              autoscaling_limit_max_cu: 0.25,
               suspend_timeout_seconds: 120,
             },
           ],
