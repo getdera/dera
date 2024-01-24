@@ -10,6 +10,7 @@ import {
 import { EffectiveMatchRequest } from './types';
 import { MatchQueryResultEntity } from './match-query-result.entity';
 import { EmbeddingSchemaEntity } from '../embedding-schemas/embedding-schema.entity';
+import { WithRequired } from '../../utils/constants';
 
 @Entity({
   name: 'match_queries',
@@ -51,9 +52,19 @@ export class MatchQueryEntity {
   })
   matchQueryBody: EffectiveMatchRequest;
 
+  @Column({
+    name: 'content',
+  })
+  content: string;
+
   @OneToMany(() => MatchQueryResultEntity, (result) => result.matchQuery, {
     eager: false,
     cascade: true,
   })
   results?: MatchQueryResultEntity[];
 }
+
+export type MatchQueryEntityWithSchemaJoined = WithRequired<
+  MatchQueryEntity,
+  'embeddingSchema'
+>;
