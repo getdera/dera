@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import {
   EffectiveMatchRequest,
   EmbeddingMatchReqDto,
@@ -22,6 +22,8 @@ const MATCHED_SCORE_COL_NAME = 'matched_score';
 
 @Injectable()
 export class MatchingService {
+  private readonly logger = new Logger(MatchingService.name);
+
   constructor(
     private readonly embeddingSchemasService: EmbeddingSchemasService,
     @InjectRepository(MatchQueryEntity)
@@ -65,6 +67,7 @@ export class MatchingService {
         query,
       );
     } catch (err) {
+      this.logger.error({ err, query }, 'Error running match query');
       throw new BadRequestException(err.message);
     }
 
@@ -162,9 +165,9 @@ export class MatchingService {
       })
       .join(' OR ');
 
-    const filter = `${matchScoreFilter || ''} ${
-      matchScoreFilter && metadataFilters ? 'AND' : ''
-    } ${metadataFilters || ''}`;
+    const filter = `${matchScoreFilter || ''}${
+      matchScoreFilter && metadataFilters ? ' AND ' : ''
+    }${metadataFilters || ''}`.trim();
 
     const orderBy = `${effectiveRequest.order.column} ${effectiveRequest.order.order}`;
 
@@ -173,7 +176,7 @@ export class MatchingService {
 
     return {
       text: `SELECT ${selectColumns} FROM ${tableName}${
-        filter ? ` WHERE ${filter}` : ''
+        filter ? ` WHERE ${filter} ` : ''
       } ORDER BY ${orderBy} LIMIT ${limit}`,
       values: parameterizedValues,
     };
