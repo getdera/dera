@@ -2,13 +2,8 @@
 
 import { useGetAuthToken } from '@/hooks/common';
 import { ActionIcon, Grid, Group, Text, Title, Tooltip } from '@mantine/core';
-import { modals } from '@mantine/modals';
 import { IconChevronRight, IconEye } from '@tabler/icons-react';
-import {
-  DataTable,
-  DataTableRowClickHandler,
-  useDataTableColumns,
-} from 'mantine-datatable';
+import { DataTable, useDataTableColumns } from 'mantine-datatable';
 import { useEffect, useState } from 'react';
 import { listMatchResultsForQuery } from '../../../lib/dera-client/dera.client';
 import {
@@ -18,6 +13,7 @@ import {
 import { showErrorNotification } from '../../../lib/utils';
 import JsonEditor from '../../json-editor/json-editor';
 import LoadingAnimation from '../../projects/project-view/loading-animation';
+import MatchResultRow from './match-result-row';
 
 export type MatchQueryWithResultsDetailsComponentProps = {
   matchQuery: MatchQueryResp;
@@ -66,15 +62,6 @@ const MatchedRowsDataTable = ({
     ],
   });
 
-  const onMatchResultRowClick: DataTableRowClickHandler<{
-    [field: string]: any;
-  }> = (row) => {
-    modals.open({
-      size: '75%',
-      children: <JsonEditor readOnly={true} content={{ json: row.record }} />,
-    });
-  };
-
   return (
     <DataTable
       borderRadius="sm"
@@ -85,7 +72,10 @@ const MatchedRowsDataTable = ({
       storeColumnsKey={storeColumnsKey}
       columns={effectiveColumns}
       records={matchResult.resultBody.rows}
-      onRowClick={onMatchResultRowClick}
+      rowExpansion={{
+        allowMultiple: true,
+        content: (row) => <MatchResultRow matchResultRow={row.record} />,
+      }}
     />
   );
 };

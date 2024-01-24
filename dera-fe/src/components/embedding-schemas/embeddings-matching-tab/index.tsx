@@ -3,7 +3,7 @@
 import { useGetAuthToken } from '@/hooks/common';
 import { ActionIcon, Group, Paper, Text, Tooltip } from '@mantine/core';
 import { modals } from '@mantine/modals';
-import { IconEye, IconGitCompare } from '@tabler/icons-react';
+import { IconEye, IconScale } from '@tabler/icons-react';
 import {
   DataTable,
   DataTableRowClickHandler,
@@ -72,12 +72,13 @@ const EmbeddingsMatchingTab = (props: EmbeddingsMatchingTabProps) => {
             >
               {record.matchQueryBody.content}
             </Text>
-            <Tooltip label="Compare query results with other embeddings">
+            <Tooltip label="Compare results based on the same query">
               <ActionIcon size="sm" variant="default">
-                <IconGitCompare
+                <IconScale
                   onClick={(ev) => {
                     ev.stopPropagation();
                     EmbeddingQueryResultsCompareModal.open({
+                      orgId,
                       projectId,
                       matchQuery: record,
                     });

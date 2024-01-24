@@ -239,7 +239,7 @@ const CreateEmbeddingSchemaForm = (
             zIndex: 999,
             width: '100%',
             height: '100%',
-            background: 'white',
+            backdropFilter: 'blur(8px)',
             opacity: 0.8,
           }}
         >

@@ -1,7 +1,13 @@
 import {
   listEmbeddingSchemasInProject,
+  listMatchResultsForQuery,
   listProjectsInOrg,
+  searchMatchQueries,
 } from '@/lib/dera-client/dera.client';
+import {
+  MatchQueryResp,
+  SearchMatchQueriesFilterReq,
+} from '@/lib/dera-client/types/embedding-match-queries-results';
 import { OrganizationResource } from '@clerk/types';
 import { useQueries, useQuery } from 'react-query';
 import { useGetAuthToken } from './common';
@@ -97,6 +103,62 @@ export function useEmbeddingSchemasList({
   return {
     embeddingSchemasList: data?.embeddingSchemas || [],
     isLoadingEmbeddingSchemasList: isLoading,
+  };
+}
+
+export function useSearchMatchQueries({
+  orgId,
+  searchFilters,
+  onError,
+}: {
+  orgId: string;
+  searchFilters: SearchMatchQueriesFilterReq;
+  onError: (error: unknown) => void;
+}) {
+  const { getAuthToken } = useGetAuthToken();
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['search-match-queries', orgId, searchFilters],
+    queryFn: async () => {
+      const token = await getAuthToken();
+
+      validateToken(token);
+
+      return searchMatchQueries(token, orgId, searchFilters);
+    },
+    onError,
+  });
+
+  return {
+    matchedQueries: data?.queries || [],
+    isLoadingMatchedQueries: isLoading,
+  };
+}
+
+export function useMatchResultsForQuery({
+  matchQuery,
+  onError,
+}: {
+  matchQuery: MatchQueryResp;
+  onError: (error: unknown) => void;
+}) {
+  const { getAuthToken } = useGetAuthToken();
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['match-results-for-query', matchQuery.id],
+    queryFn: async () => {
+      const token = await getAuthToken();
+
+      validateToken(token);
+
+      return listMatchResultsForQuery(token, matchQuery.orgId, matchQuery.id);
+    },
+    onError,
+  });
+
+  return {
+    matchedQueryResults: data?.results || [],
+    isLoadingMatchedQueryResults: isLoading,
   };
 }
 
