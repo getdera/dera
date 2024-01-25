@@ -88,7 +88,7 @@ export class EmbeddingMatchReq {
   @IsInt()
   @Min(1)
   @Max(20)
-  limit: number;
+  limit: number = 10;
 
   @IsOptional()
   @Type(() => OrderReq)
