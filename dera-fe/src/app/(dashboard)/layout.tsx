@@ -5,6 +5,7 @@ import { AppShell, Box, Burger, Container, Group } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import Image from 'next/image';
 import Sidebar from '../../components/sidebar/sidebar';
+import Link from 'next/link';
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const [opened, { toggle }] = useDisclosure();
@@ -21,14 +22,16 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     >
       <AppShell.Header p={5}>
         <Group justify="space-between">
-          <Box
-            component={Image}
-            src="/icon.png"
-            alt="Logo"
-            width={32}
-            height={32}
-            visibleFrom="sm"
-          />
+          <Link href="/">
+            <Box
+              component={Image}
+              src="/icon.png"
+              alt="Logo"
+              width={32}
+              height={32}
+              visibleFrom="sm"
+            />
+          </Link>
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
           <UserButton afterSignOutUrl="/" />
         </Group>

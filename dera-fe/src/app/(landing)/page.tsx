@@ -88,31 +88,25 @@ function Evaluate() {
           <Title order={2}>Visualize and evaluate</Title>
 
           <Text>
-            Inspired by Jerry Liu's (Cofounder of LlamaIndex) talk, and
-            frustrated by our own experience when building RAG applications, we
-            build this tool to help visualize and evaluate text and embeddings
-            data.
+            Inspired by Jerry Liu's (CEO & Cofounder of LlamaIndex){' '}
+            <a
+              href="https://www.youtube.com/watch?v=TRjq7t2Ms5I"
+              target="_blank"
+            >
+              talk
+            </a>
+            , and frustrated by our own experience when building RAG
+            applications, we build this tool to help visualize and evaluate text
+            and embeddings data.
           </Text>
         </Stack>
 
-        <AspectRatio ratio={4 / 3}>
-          <Card h="100%">Image Placeholder</Card>
+        <AspectRatio ratio={780 / 600}>
+          <Card p={0} withBorder>
+            <Image fill src="/landing/visualize.jpg" alt="Visualize" />
+          </Card>
         </AspectRatio>
       </SimpleGrid>
-
-      <AspectRatio ratio={560 / 315}>
-        <Card p={0}>
-          <iframe
-            width="100%"
-            height="100%"
-            src="https://www.youtube.com/embed/TRjq7t2Ms5I?si=cX5H4F0ORTbsOKsQ"
-            title="YouTube video player"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-          ></iframe>
-        </Card>
-      </AspectRatio>
     </Stack>
   );
 }
