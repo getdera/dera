@@ -1,9 +1,9 @@
 'use client';
 
 import { useGetAuthToken } from '@/hooks/common';
-import { ActionIcon, Group, Paper, Text, Tooltip } from '@mantine/core';
+import { ActionIcon, Button, Group, Paper, Text, Tooltip } from '@mantine/core';
 import { modals } from '@mantine/modals';
-import { IconEye, IconScale } from '@tabler/icons-react';
+import { IconEye, IconRefresh, IconScale } from '@tabler/icons-react';
 import {
   DataTable,
   DataTableRowClickHandler,
@@ -103,7 +103,7 @@ const EmbeddingsMatchingTab = (props: EmbeddingsMatchingTabProps) => {
     ],
   });
 
-  const fetchMatchQueriesInSchema = async () => {
+  const fetchMatchQueriesInSchema = async (refresh?: boolean) => {
     try {
       setFetching(true);
       const token = await getAuthToken();
@@ -120,9 +120,13 @@ const EmbeddingsMatchingTab = (props: EmbeddingsMatchingTabProps) => {
         token,
         orgId,
         embeddingSchemaId,
-        currentPage + 1,
+        refresh ? 0 : currentPage + 1,
       );
-      setRows([...rows, ...listMatchQueriesResp.queries]);
+      setRows(
+        refresh
+          ? listMatchQueriesResp.queries
+          : [...rows, ...listMatchQueriesResp.queries],
+      );
       setHasNextPage(listMatchQueriesResp.hasNextPage);
       setCurrentPage(listMatchQueriesResp.page);
       setFetching(false);
@@ -150,6 +154,10 @@ const EmbeddingsMatchingTab = (props: EmbeddingsMatchingTabProps) => {
     }
   };
 
+  const refreshTable = async () => {
+    await fetchMatchQueriesInSchema(true);
+  };
+
   useEffect(() => {
     fetchMatchQueriesInSchema().then();
   }, []);
@@ -157,8 +165,11 @@ const EmbeddingsMatchingTab = (props: EmbeddingsMatchingTabProps) => {
   return (
     <>
       <Paper p="md" mt="sm" mb="sm" withBorder>
-        <Group justify="space-between">
+        <Group justify="flex-start">
           <Text size="sm">Showing {rows.length} records</Text>
+          <Button size="xs" onClick={refreshTable}>
+            <IconRefresh />
+          </Button>
         </Group>
       </Paper>
       {/* BUG: highlightOnHover and sticky header does not work. Unsure if related to order of CSS imports. */}

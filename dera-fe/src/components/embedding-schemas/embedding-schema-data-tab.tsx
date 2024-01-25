@@ -1,7 +1,7 @@
 'use client';
 
 import { useGetAuthToken } from '@/hooks/common';
-import { Group, Paper, Text } from '@mantine/core';
+import { Button, Group, Paper, Text } from '@mantine/core';
 import { DataTable, useDataTableColumns } from 'mantine-datatable';
 import { useEffect, useState } from 'react';
 import { fetchEmbeddingSchemaData } from '../../lib/dera-client/dera.client';
@@ -11,6 +11,7 @@ import {
 } from '../../lib/dera-client/types/embeddings';
 import { showErrorNotification } from '../../lib/utils';
 import LoadingAnimation from '../projects/project-view/loading-animation';
+import { IconRefresh } from '@tabler/icons-react';
 
 export type EmbeddingSchemaDataTabProps = {
   orgId: string;
@@ -48,7 +49,7 @@ const EmbeddingSchemaDataTable = (props: EmbeddingSchemaDataTableProps) => {
   const [rows, setRows] = useState<EmbeddingSchemaData[]>([]);
   const [hasMoreRows, setHasMoreRows] = useState<boolean>(true);
 
-  const fetchData = async () => {
+  const fetchData = async (refresh?: boolean) => {
     setFetching(true);
     const token = await getAuthToken();
 
@@ -67,12 +68,12 @@ const EmbeddingSchemaDataTable = (props: EmbeddingSchemaDataTableProps) => {
         projectId,
         embeddingSchemaId,
         {
-          offset: rows.length,
+          offset: refresh ? 0 : rows.length,
           limit: batchSize,
         },
       );
       setHasMoreRows(!!dataResp.rows.length);
-      setRows([...rows, ...dataResp.rows]);
+      setRows(refresh ? dataResp.rows : [...rows, ...dataResp.rows]);
     } catch (err) {
       showErrorNotification((err as any)?.message || 'An error occurred.');
     }
@@ -89,15 +90,23 @@ const EmbeddingSchemaDataTable = (props: EmbeddingSchemaDataTableProps) => {
     }
   };
 
+  const refreshTable = async () => {
+    await fetchData(true);
+  };
+
   // FEAT: UX can be improved
   // e.g. specifying offset and batch size, or a load more button, or allowing columns to be specified (requires backend changes).
   return (
     <>
       <Paper p="md" mt="sm" mb="sm" withBorder>
-        <Group justify="space-between">
+        <Group justify="flex-start">
           <Text size="sm">Showing {rows.length} records</Text>
+          <Button size="xs" onClick={refreshTable}>
+            <IconRefresh />
+          </Button>
         </Group>
       </Paper>
+
       {/* BUG: highlightOnHover and sticky header does not work. Unsure if related to order of CSS imports. */}
       <DataTable
         borderRadius="sm"
