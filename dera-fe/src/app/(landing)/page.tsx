@@ -47,9 +47,17 @@ const LandingPage = () => {
 
 function Demo() {
   return (
-    <AspectRatio ratio={4 / 3}>
-      <Card h="100%">Demo Placeholder</Card>
-    </AspectRatio>
+    <Card p={0} w="100%">
+      <AspectRatio w="100%" ratio={1.78}>
+        <video
+          src="/landing/demo.mp4"
+          preload="none"
+          poster="/landing/demo-preview.png"
+          controls
+          width="100%"
+        />
+      </AspectRatio>
+    </Card>
   );
 }
 
