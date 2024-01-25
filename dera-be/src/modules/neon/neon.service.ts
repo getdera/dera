@@ -8,13 +8,19 @@ import { NeonProject, NeonServiceConfig } from './types';
 import {
   BranchResponse,
   DatabasesResponse,
-  Endpoint,
+  DefaultEndpointSettings,
   EndpointsResponse,
   GeneralError,
   NeonClient,
   ProjectResponse,
   RolesResponse,
 } from 'neon-sdk';
+
+const defaultComputeEndpointConfig = {
+  autoscaling_limit_min_cu: 0.25,
+  autoscaling_limit_max_cu: 0.25,
+  suspend_timeout_seconds: 120,
+};
 
 @Injectable()
 export class NeonService {
@@ -36,6 +42,10 @@ export class NeonService {
         {
           project: {
             name,
+            // FEAT: make this configurable
+            // need to do this cast because the type is Record<string, string> but if the values are string, the API call will fail
+            default_endpoint_settings:
+              defaultComputeEndpointConfig as unknown as DefaultEndpointSettings,
           },
         },
       );
@@ -95,9 +105,7 @@ export class NeonService {
             {
               type: 'read_write',
               // FEAT: make this configurable
-              autoscaling_limit_min_cu: 0.25,
-              autoscaling_limit_max_cu: 0.25,
-              suspend_timeout_seconds: 120,
+              ...defaultComputeEndpointConfig,
             },
           ],
           branch: {
