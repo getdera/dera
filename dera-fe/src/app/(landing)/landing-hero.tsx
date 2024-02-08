@@ -2,6 +2,7 @@
 
 import { Text, Title } from '@mantine/core';
 import TypewriterComponent from 'typewriter-effect';
+import { GetInTouchButton } from './get-in-touch-button';
 import { GetStartedButton } from './get-started-button';
 
 export const LandingHero = () => {
@@ -38,7 +39,11 @@ export const LandingHero = () => {
         Retrieval-Augmented Generation (RAG) applications.
       </div>
       <div>
-        <GetStartedButton size="xl" />
+        {process.env.NEXT_PUBLIC_CLOSE_SIGNUPS === 'true' ? (
+          <GetInTouchButton size="xl" href="#pricing" />
+        ) : (
+          <GetStartedButton size="xl" />
+        )}
       </div>
     </div>
   );

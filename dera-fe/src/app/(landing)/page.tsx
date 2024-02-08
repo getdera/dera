@@ -20,6 +20,7 @@ import Image from 'next/image';
 import { GetStartedButton } from './get-started-button';
 import { LandingHero } from './landing-hero';
 import classes from './page.module.css';
+import { GetInTouchButton } from './get-in-touch-button';
 
 const LandingPage = () => {
   return (
@@ -181,6 +182,13 @@ function Pricing() {
         Pricing
       </Title>
 
+      {process.env.NEXT_PUBLIC_CLOSE_SIGNUPS === 'true' && (
+        <Title ta="center" order={6}>
+          We have closed signups for our beta for now. Please reach out to us if
+          you are interested in trying out Dera.
+        </Title>
+      )}
+
       <Card withBorder>
         <Group justify="space-evenly">
           <Stack gap={0}>
@@ -190,7 +198,11 @@ function Pricing() {
             <Text size="sm" c="dimmed" ta="center" mb="sm">
               Perfect for trying out Dera
             </Text>
-            <GetStartedButton />
+            {process.env.NEXT_PUBLIC_CLOSE_SIGNUPS === 'true' ? (
+              <GetInTouchButton href={`mailto:${contact}`} />
+            ) : (
+              <GetStartedButton />
+            )}
           </Stack>
 
           <List icon={<IconCheck color="green" />}>
