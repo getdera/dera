@@ -6,6 +6,7 @@ import Link from 'next/link';
 
 import { ActionIcon, Group, NavLink, Text, Title } from '@mantine/core';
 import { IconBrandGithub } from '@tabler/icons-react';
+import { LoginButton } from './login-button';
 import { GetStartedButton } from './get-started-button';
 
 const font = Montserrat({ weight: '600', subsets: ['latin'] });
@@ -42,7 +43,11 @@ export const LandingNavbar = () => {
         >
           <IconBrandGithub />
         </ActionIcon>
-        <GetStartedButton />
+        {process.env.NEXT_PUBLIC_CLOSE_SIGNUPS === 'true' ? (
+          <LoginButton />
+        ) : (
+          <GetStartedButton />
+        )}
       </Group>
     </Group>
   );
